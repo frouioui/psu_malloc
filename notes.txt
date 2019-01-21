@@ -1,0 +1,26 @@
+liste chainee
+meta data
+
+block size (power 2)
+
+creation memory : padding
+
+allocate more for reuse (10 becomes 16 bc power of 2)
+
+do not use brk()/sbrk() too many times
+
+pagesize - allocated big block and inside those blocks do a linked list of data
+
+LD_PRELOAD=/path/path
+
+malloc():
+
+
+free():
+	re use memory
+
+realloc():
+
+
+show_alloc_mem():
+
