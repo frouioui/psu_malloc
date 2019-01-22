@@ -15,7 +15,8 @@ typedef struct node_s {
     void *data_addr;
     size_t node_size;
     bool used;
-    struct mode_s *next;
+    struct node_s *next;
+    struct node_s *before;
 } node_t;
 
 #endif /* !NODE_H_ */
