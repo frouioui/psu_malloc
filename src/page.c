@@ -24,8 +24,10 @@ page_t *new_page(size_t times)
     new->node_allocated = (void *)(new + sizeof(page_t));
     new->node_allocated->data_addr = NULL;
     new->node_allocated->next = NULL;
+    new->node_allocated->before = NULL;
     new->node_allocated->node_size = 0;
     new->node_allocated->used = false;
     new->node_freed = NULL;
     return (new);
 }
+

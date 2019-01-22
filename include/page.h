@@ -24,6 +24,6 @@ extern const size_t DEFAULT_MULTIPLICATION_FACTOR;
 
 page_t *new_page(size_t size);
 
-page_t *head;
+page_t *head = NULL;
 
 #endif /* !PAGE_H_ */
