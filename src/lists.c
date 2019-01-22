@@ -32,10 +32,10 @@ void *check_free_list(size_t size)
     index = head->node_freed;
     while (index != NULL) {
         if (index->node_size <= size / 2 + sizeof(node_t)) {
-            split_node(index)
-            return ((void*)(index->data_addr));
+            split_node(index);
+            // add to the allocate linked list
         } else if (index->node_size <= size) {
-            return ((void*)(index->data_addr));
+            // add to the allocate linked list
         }
         index = index->next;
     }
@@ -47,14 +47,22 @@ void *check_allocate_list(size_t size)
     size_t total_size = 0;
     node_t *index = NULL;
     node_t *new = NULL;
+    page_t *index_page = head;
 
-    if (head->node_allocated == NULL)
-        return (NULL);
-    index = head->node_allocated;
-    while (index->next != NULL) {
-        index = index->next;
-        total_size += sizeof(node_t) + 
+    while (index_page) {
+        index = head->node_allocated;
+        while (index->next != NULL) {
+            index = index->next;
+            total_size += sizeof(node_t) + index->node_size;
+        }
+        if (total_size + size <= head->pagesize) {
+            new = (void*)(index + sizeof(size_t) + index->node_size + 1);
+            (index != NULL) ? (index->next = new) : (index = new);
+            new->before = index;
+            return ((void*)new);
+        }
+        index_page = index_page->next;
     }
-    new = (void*)(index + sizeof(size_t) + index->node_size + 1);
-    return (new);
+    return (NULL);
 }
+
