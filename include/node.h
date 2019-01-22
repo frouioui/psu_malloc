@@ -18,4 +18,7 @@ typedef struct node_s {
     struct mode_s *next;
 } node_t;
 
+void *init_node(node_t *node, size_t size);
+void *my_sbrk(node_t *previous);
+
 #endif /* !NODE_H_ */

@@ -20,7 +20,7 @@ typedef struct page_s {
     struct page_s *before;
 } page_t;
 
-const size_t DEFAULT_MULTIPLICATION_FACTOR = 32;
+extern const size_t DEFAULT_MULTIPLICATION_FACTOR;
 
 page_t *new_page(size_t size);
 

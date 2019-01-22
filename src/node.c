@@ -18,3 +18,18 @@ void *my_sbrk(node_t *previous)
         return ((void*)previous);
     return ((void *)(previous + sizeof(node_t) + previous->node_size));
 }
+
+void *init_node(node_t *node, size_t size)
+{
+    node->node_size = size;
+    node->used = true;
+    node->data_addr = (void *)(node + sizeof(node_t));
+    node->next = NULL;
+    return (node->data_addr);
+}
+
+
+pthread_mutex_t lock;
+
+pthread_mutex_lock(&lock);
+pthread_mutex_unlock(&lock);
