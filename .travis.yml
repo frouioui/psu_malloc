@@ -33,7 +33,7 @@ jobs:
           before_script:
             - docker pull epitechcontent/epitest-docker
           script:
-            - docker run -v $PWD:/app epitechcontent/epitest-docker bash -c "cd add"
+            - docker run -v $PWD:/app epitechcontent/epitest-docker bash -c "cd app"
 
         - stage: deploy
           name: "Deployement"
