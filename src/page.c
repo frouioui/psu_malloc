@@ -11,19 +11,27 @@
 // Number of pagesize that sbrk will ask for to the system.
 const size_t DEFAULT_MULTIPLICATION_FACTOR = 32;
 
-// Create a brand new page.
-page_t *new_page(size_t times)
+static size_t get_alloc_size(size_t size)
 {
-    size_t size = getpagesize();
+    size_t alloc_size = getpagesize();
+
+    alloc_size *= DEFAULT_MULTIPLICATION_FACTOR;
+    for (; alloc_size < size; times += times) {
+        alloc_size *= times;
+    }
+    return (alloc_size);
+}
+
+// Create a brand new page.
+page_t *new_page(size_t size)
+{
+    size_t alloc_size = get_alloc_size(size);
     page_t *new = NULL;
 
-    if (times == 0)
-        times = 1;
-    size *= DEFAULT_MULTIPLICATION_FACTOR * times;
-    new = sbrk(size);
+    new = sbrk(alloc_size);
     new->before = NULL;
     new->next = NULL;
-    new->pagesize = size;
+    new->pagesize = alloc_size;
     new->node_allocated = (void *)(new + sizeof(page_t));
     new->node_allocated->data_addr = NULL;
     new->node_allocated->next = NULL;
@@ -37,17 +45,17 @@ page_t *new_page(size_t times)
 // Allocates a new page and then will create a new node.
 void *allocate_new_page_and_node(size_t size)
 {
-    size_t times = 2;
     void *address = NULL;
     page_t *index = head;
 
+    if (index == NULL)
+        index = new_page(size);
     while (index != NULL && index->next != NULL)
         index = index->next;
-    for (size_t tmp = 0; tmp < size; times += times) {
-        tmp *= DEFAULT_MULTIPLICATION_FACTOR * times;
-    }
-    index->next = new_page(times);
-    index->next->before = index;
-    index = index->next;
+    if (index != NULL) {
+        index->next = new_page(size);
+        index->next->before = index;
+    } else
+        index = new_page(size);
     return (check_allocate_list(size));
 }

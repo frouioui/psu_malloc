@@ -27,9 +27,3 @@ void *init_node(node_t *node, size_t size)
     node->next = NULL;
     return (node->data_addr);
 }
-
-
-pthread_mutex_t lock;
-
-pthread_mutex_lock(&lock);
-pthread_mutex_unlock(&lock);

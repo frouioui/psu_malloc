@@ -14,7 +14,7 @@ void *malloc(size_t size)
     bool done = false;
 
     if (head == NULL)
-        head = new_page(0);
+        head = new_page(size);
     address = check_free_list(size);
     if (address != NULL)
         return (address);
