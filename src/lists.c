@@ -56,7 +56,7 @@ void *check_allocate_list(size_t size)
             total_size += sizeof(node_t) + index->node_size;
         }
         if (total_size + size + sizeof(node_t) <= head->pagesize) {
-            new = (void*)(index + sizeof(size_t) + index->node_size + 1);
+            new = my_sbrk(index);
             (index != NULL) ? (index->next = new) : (index = new);
             new->before = index;
             return (init_node(new, size));
