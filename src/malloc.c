@@ -14,10 +14,10 @@ void *malloc(size_t size)
     bool done = false;
 
     if (head == NULL)
-        head = new_page(0);
+        head = new_page(size);
     address = check_free_list(size);
     if (address != NULL)
-        return address;
+        return (address);
     address = check_allocated_list(size);
     if (address == NULL)
         address = allocate_new_page_and_node(size);
