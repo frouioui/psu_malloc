@@ -23,6 +23,29 @@ static void split_node(node_t *node)
     node->next = new;
 }
 
+static void *add_to_allocated_list(node_t *to_add)
+{
+    node_t *index = page->node_allocated;
+    node_t *index = NULL;
+    node_t *new = NULL;
+    page_t *index_page = head;
+
+    for (size_t total = 0; index_page; total = 0) {
+        index = index_page->node_allocated;
+        while (index != NULL && index->next != NULL) {
+            index = index->next;
+            total += sizeof(node_t) + index->node_size;
+        }
+        if (total + to_add->node_size + sizeof(node_t) <= index_page->pagesize) {
+            (index != NULL) ? (index->next = to_add) : (index = to_add);
+            to_add->before = index;
+            return (init_node(to_add, to_add->node_size));
+        }
+        index_page = index_page->next;
+    }
+    return (NULL);
+}
+
 void *check_free_list(size_t size)
 {
     node_t *index = NULL;
@@ -33,9 +56,9 @@ void *check_free_list(size_t size)
     while (index != NULL) {
         if (index->node_size <= size / 2 + sizeof(node_t)) {
             split_node(index);
-            // add to the allocate linked list
+            return (add_to_allocated_list(index));
         } else if (index->node_size <= size) {
-            // add to the allocate linked list
+            return (add_to_allocated_list(index));
         }
         index = index->next;
     }
@@ -44,18 +67,17 @@ void *check_free_list(size_t size)
 
 void *check_allocate_list(size_t size)
 {
-    size_t total_size = 0;
     node_t *index = NULL;
     node_t *new = NULL;
     page_t *index_page = head;
 
-    while (index_page) {
+    for (size_t total_size = 0; index_page; total_size = 0) {
         index = index_page->node_allocated;
         while (index != NULL && index->next != NULL) {
             index = index->next;
             total_size += sizeof(node_t) + index->node_size;
         }
-        if (total_size + size + sizeof(node_t) <= head->pagesize) {
+        if (total_size + size + sizeof(node_t) <= index_page->pagesize) {
             new = my_sbrk(index);
             (index != NULL) ? (index->next = new) : (index = new);
             new->before = index;
