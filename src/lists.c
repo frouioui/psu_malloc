@@ -50,16 +50,16 @@ void *check_allocate_list(size_t size)
     page_t *index_page = head;
 
     while (index_page) {
-        index = head->node_allocated;
-        while (index->next != NULL) {
+        index = index_page->node_allocated;
+        while (index != NULL && index->next != NULL) {
             index = index->next;
             total_size += sizeof(node_t) + index->node_size;
         }
-        if (total_size + size <= head->pagesize) {
+        if (total_size + size + sizeof(node_t) <= head->pagesize) {
             new = (void*)(index + sizeof(size_t) + index->node_size + 1);
             (index != NULL) ? (index->next = new) : (index = new);
             new->before = index;
-            return ((void*)new);
+            return (init_node(new, size));
         }
         index_page = index_page->next;
     }
