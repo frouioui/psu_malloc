@@ -62,7 +62,7 @@ lib: $(LIB_OBJ)
 	$(CC) -fPIC -shared -o $(LIB_NAME) $(LIB_OBJ)
 
 gdb:
-	gcc -o $(NAME) $(SRC) $(MAIN) -g3
+	gcc -o $(NAME) $(SRC) $(MAIN) -g3 $(INCLUDE)
 
 tests_run:
 	gcc -o $(UT) $(UT_SRC) $(SRC) $(CFLAGS) $(LDFLAGS)

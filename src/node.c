@@ -17,9 +17,12 @@ const size_t size_t_size = 8;
 */
 void *my_sbrk(node_t *previous)
 {
+    char *tmp = (char *)(previous + 1);
+
     if (previous->data_addr == NULL)
         return ((void*)previous);
-    return (previous->data_addr + previous->node_size);
+    tmp += previous->node_size;
+    return ((void *)tmp);
 }
 
 void *init_node(node_t *node, size_t size)
