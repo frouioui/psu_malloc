@@ -6,7 +6,7 @@
 ##
 
 ## ------------- UNIT TESTS ------------- ##
-CC	=	gcc -fPIC $(INCLUDE)
+CC	=	gcc -fPIC $(INCLUDE) -g3
 
 UT_DIR	=	./tests/
 

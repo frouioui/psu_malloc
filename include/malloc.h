@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include "page.h"
 
-void *malloc(size_t size);
+void *my_malloc(size_t size);
 
 extern pthread_mutex_t lock;
 extern page_t *head;

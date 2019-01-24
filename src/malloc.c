@@ -12,7 +12,7 @@
 pthread_mutex_t lock;
 page_t *head = NULL;
 
-void *malloc(size_t size)
+void *my_malloc(size_t size)
 {
     void *address = NULL;
     // bool done = false;
