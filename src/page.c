@@ -5,7 +5,7 @@
 ** Page functions
 */
 
-#include "page.h"
+#include "malloc.h"
 
 // Default multiplication factor for the page.
 // Number of pagesize that sbrk will ask for to the system.

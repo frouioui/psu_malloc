@@ -6,7 +6,7 @@
 ##
 
 ## ------------- UNIT TESTS ------------- ##
-CC	=	gcc $(INCLUDE)
+CC	=	gcc -fPIC $(INCLUDE)
 
 UT_DIR	=	./tests/
 
@@ -56,13 +56,13 @@ all:	$(NAME)
 
 $(NAME): $(OBJ)
 	# export LD_LIBRARY_PATH=$PWD
-	$(CC) -o $(NAME) $(OBJ)
+	gcc -o $(NAME) $(OBJ)
 
 lib: $(LIB_OBJ)
-	$(CC) -fPIC -shared -o $(LIB_NAME) $(LIB_OBJ) $(INCLUDE)
+	$(CC) -fPIC -shared -o $(LIB_NAME) $(LIB_OBJ)
 
 gdb:
-	$(CC) -o $(NAME) $(SRC) $(MAIN) -g3
+	gcc -o $(NAME) $(SRC) $(MAIN) -g3
 
 tests_run:
 	gcc -o $(UT) $(UT_SRC) $(SRC) $(CFLAGS) $(LDFLAGS)

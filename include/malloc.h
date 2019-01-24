@@ -9,7 +9,11 @@
 	#define MALLOC_H_
 
 #include <stdlib.h>
+#include "page.h"
 
-// void *malloc(size_t size);
+void *malloc(size_t size);
+
+extern pthread_mutex_t lock;
+extern page_t *head;
 
 #endif /* !MALLOC_H_ */

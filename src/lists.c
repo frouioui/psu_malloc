@@ -6,8 +6,7 @@
 */
 
 #include <stdlib.h>
-#include "page.h"
-#include "node.h"
+#include "malloc.h"
 
 // Need to split the node, inserting a new node just ahead of
 // the given one.

@@ -27,6 +27,6 @@ void *allocate_new_page_and_node(size_t size);
 void *check_allocate_list(size_t size);
 void *check_free_list(size_t size);
 
-extern page_t *head;
+extern page_t *head_toto;
 
 #endif /* !PAGE_H_ */
