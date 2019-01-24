@@ -54,9 +54,7 @@ NAME	=	exec
 
 all:	$(NAME)
 
-$(NAME): $(OBJ)
-	# export LD_LIBRARY_PATH=$PWD
-	gcc -o $(NAME) $(OBJ)
+$(NAME): lib
 
 lib: $(LIB_OBJ)
 	$(CC) -fPIC -shared -o $(LIB_NAME) $(LIB_OBJ)

@@ -24,10 +24,7 @@ static void split_node(node_t *node)
 
 static void *add_to_allocated_list(node_t *to_add)
 {
-    // node_t *index = page->node_allocated;
     node_t *index_n = NULL;
-    // node_t *index = NULL;
-    // node_t *new = NULL;
     page_t *index_p = head;
 
     for (size_t total = 0; index_p; total = 0) {
@@ -55,11 +52,9 @@ void *check_free_list(size_t size)
         return (NULL);
     index = head->node_freed;
     while (index != NULL) {
-        // if (index->node_size <= size / 2 + sizeof(node_t)) {
         if (size <= index->node_size / 2 + sizeof(node_t)) {
             split_node(index);
             return (add_to_allocated_list(index));
-        // } else if (index->node_size <= size) {
         } else if (size <= index->node_size) {
             return (add_to_allocated_list(index));
         }

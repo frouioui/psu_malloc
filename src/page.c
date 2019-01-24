@@ -46,7 +46,6 @@ page_t *new_page(size_t size)
 // Allocates a new page and then will create a new node.
 void *allocate_new_page_and_node(size_t size)
 {
-    // void *address = NULL;
     page_t *index = head;
 
     if (index == NULL)
