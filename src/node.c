@@ -12,6 +12,9 @@ const size_t addr_size = 8;
 const size_t bool_size = 8;
 const size_t size_t_size = 8;
 
+/**
+*
+*/
 void *my_sbrk(node_t *previous)
 {
     if (previous->data_addr == NULL)
