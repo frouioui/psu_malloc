@@ -14,6 +14,7 @@ const size_t DEFAULT_MULTIPLICATION_FACTOR = 32;
 static size_t get_alloc_size(size_t size)
 {
     size_t alloc_size = getpagesize();
+    size_t times = 2;
 
     alloc_size *= DEFAULT_MULTIPLICATION_FACTOR;
     for (; alloc_size < size; times += times) {
@@ -32,11 +33,11 @@ page_t *new_page(size_t size)
     new->before = NULL;
     new->next = NULL;
     new->pagesize = alloc_size;
-    new->node_allocated = (void *)(new + sizeof(page_t));
-    new->node_allocated->data_addr = NULL;
+    new->node_allocated = (void *)(new + 1);
+    new->node_allocated->data_addr = (void *)(new->node_allocated + 1);
     new->node_allocated->next = NULL;
     new->node_allocated->before = NULL;
-    new->node_allocated->node_size = 0;
+    new->node_allocated->node_size = size;
     new->node_allocated->used = false;
     new->node_freed = NULL;
     return (new);
@@ -45,7 +46,7 @@ page_t *new_page(size_t size)
 // Allocates a new page and then will create a new node.
 void *allocate_new_page_and_node(size_t size)
 {
-    void *address = NULL;
+    // void *address = NULL;
     page_t *index = head;
 
     if (index == NULL)

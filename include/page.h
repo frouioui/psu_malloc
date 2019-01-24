@@ -23,9 +23,10 @@ typedef struct page_s {
 extern const size_t DEFAULT_MULTIPLICATION_FACTOR;
 
 page_t *new_page(size_t size);
+void *allocate_new_page_and_node(size_t size);
 void *check_allocate_list(size_t size);
 void *check_free_list(size_t size);
 
-page_t *head = NULL;
+extern page_t *head;
 
 #endif /* !PAGE_H_ */

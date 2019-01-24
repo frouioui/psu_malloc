@@ -6,7 +6,7 @@
 ##
 
 ## ------------- UNIT TESTS ------------- ##
-CC	=	gcc
+CC	=	gcc $(INCLUDE)
 
 UT_DIR	=	./tests/
 
@@ -15,9 +15,14 @@ UT_SRC	=
 UT	=	units
 
 ## ------------- SHARED LIB ------------- ##
-LIB_SRC	= lib.c
+LIB_DIR	= 	./src/
 
-LIB_NAME	=	libmy.so
+LIB_SRC	= 	$(LIB_DIR)lists.c	\
+			$(LIB_DIR)malloc.c	\
+			$(LIB_DIR)node.c	\
+			$(LIB_DIR)page.c	\
+
+LIB_NAME	=	libmy_malloc.so
 
 LIB_FLAG	=
 
@@ -25,16 +30,19 @@ LIB_FLAG	=
 
 SRC_DIR	= ./src/
 
-SRC	=
+SRC	=	$(SRC_DIR)lists.c	\
+		$(SRC_DIR)malloc.c	\
+		$(SRC_DIR)node.c	\
+		$(SRC_DIR)page.c	\
 
-MAIN	= main.c
+MAIN	=	$(SRC_DIR)main.c
 
 ## ---------------- FLAGS ----------------- ##
-HEADER	=	-L. -lmy.so
+HEADER	=	-L. -lmy_malloc.so
 
 INCLUDE	=	-I./include/
 
-CFLAGS	=	-W -Wall -Wextra -pedantic $(HEADER)
+CFLAGS	=	-W -Wall -Wextra -Werror -pedantic $(HEADER)
 
 LDFLAGS	=	-lcriterion -lgcov -coverage
 
@@ -48,13 +56,13 @@ all:	$(NAME)
 
 $(NAME): $(OBJ)
 	# export LD_LIBRARY_PATH=$PWD
-	$(CC) -o $(NAME) $(OBJ) -ldl
+	$(CC) -o $(NAME) $(OBJ)
 
 lib: $(LIB_OBJ)
-	$(CC) -fPIC -shared -o $(LIB_NAME) $(LIB_OBJ)
+	$(CC) -fPIC -shared -o $(LIB_NAME) $(LIB_OBJ) $(INCLUDE)
 
 gdb:
-	$(CC) -o $(NAME) $(SRC) $(MAIN) -g3 -ldl
+	$(CC) -o $(NAME) $(SRC) $(MAIN) -g3
 
 tests_run:
 	gcc -o $(UT) $(UT_SRC) $(SRC) $(CFLAGS) $(LDFLAGS)

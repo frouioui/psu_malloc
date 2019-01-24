@@ -25,23 +25,25 @@ static void split_node(node_t *node)
 
 static void *add_to_allocated_list(node_t *to_add)
 {
-    node_t *index = page->node_allocated;
-    node_t *index = NULL;
-    node_t *new = NULL;
-    page_t *index_page = head;
+    // node_t *index = page->node_allocated;
+    node_t *index_n = NULL;
+    // node_t *index = NULL;
+    // node_t *new = NULL;
+    page_t *index_p = head;
 
-    for (size_t total = 0; index_page; total = 0) {
-        index = index_page->node_allocated;
-        while (index != NULL && index->next != NULL) {
-            index = index->next;
-            total += sizeof(node_t) + index->node_size;
+    for (size_t total = 0; index_p; total = 0) {
+        index_n = index_p->node_allocated;
+        while (index_n != NULL && index_n->next != NULL) {
+            index_n = index_n->next;
+            total += sizeof(node_t) + index_n->node_size;
         }
-        if (total + to_add->node_size + sizeof(node_t) <= index_page->pagesize) {
-            (index != NULL) ? (index->next = to_add) : (index = to_add);
-            to_add->before = index;
+        if (total + to_add->node_size + sizeof(node_t) <= index_p->pagesize) {
+            (index_n != NULL) ? (index_n->next = to_add) : (index_n = to_add);
+            (index_n == to_add) ? (to_add->before = NULL) :
+            (to_add->before = index_n);
             return (init_node(to_add, to_add->node_size));
         }
-        index_page = index_page->next;
+        index_p = index_p->next;
     }
     return (NULL);
 }
@@ -54,10 +56,12 @@ void *check_free_list(size_t size)
         return (NULL);
     index = head->node_freed;
     while (index != NULL) {
-        if (index->node_size <= size / 2 + sizeof(node_t)) {
+        // if (index->node_size <= size / 2 + sizeof(node_t)) {
+        if (size <= index->node_size / 2 + sizeof(node_t)) {
             split_node(index);
             return (add_to_allocated_list(index));
-        } else if (index->node_size <= size) {
+        // } else if (index->node_size <= size) {
+        } else if (size <= index->node_size) {
             return (add_to_allocated_list(index));
         }
         index = index->next;
@@ -67,24 +71,23 @@ void *check_free_list(size_t size)
 
 void *check_allocate_list(size_t size)
 {
-    node_t *index = NULL;
+    node_t *index_n = NULL;
     node_t *new = NULL;
-    page_t *index_page = head;
+    page_t *index_p = head;
 
-    for (size_t total_size = 0; index_page; total_size = 0) {
-        index = index_page->node_allocated;
-        while (index != NULL && index->next != NULL) {
-            index = index->next;
-            total_size += sizeof(node_t) + index->node_size;
+    for (size_t total_size = 0; index_p; total_size = 0) {
+        index_n = index_p->node_allocated;
+        while (index_n != NULL && index_n->next != NULL) {
+            index_n = index_n->next;
+            total_size += sizeof(node_t) + index_n->node_size;
         }
-        if (total_size + size + sizeof(node_t) <= index_page->pagesize) {
-            new = my_sbrk(index);
-            (index != NULL) ? (index->next = new) : (index = new);
-            new->before = index;
+        if (total_size + size + sizeof(node_t) <= index_p->pagesize) {
+            new = my_sbrk(index_n);
+            (index_n != NULL) ? (index_n->next = new) : (index_n = new);
+            (index_n == new) ? (new->before = NULL) : (new->before = index_n);
             return (init_node(new, size));
         }
-        index_page = index_page->next;
+        index_p = index_p->next;
     }
     return (NULL);
 }
-
