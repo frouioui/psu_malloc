@@ -5,6 +5,9 @@
 ## Makefile for compilation
 ##
 
+## ----------- Documentation ------------ ##
+DOC_FILE	=	Doxyfile
+
 ## ------------- UNIT TESTS ------------- ##
 CC	=	gcc -fPIC $(INCLUDE) -g3
 
@@ -66,6 +69,9 @@ tests_run:
 	gcc -o $(UT) $(UT_SRC) $(SRC) $(CFLAGS) $(LDFLAGS)
 	./$(UT)
 
+doxygen:
+	doxygen $(DOC_FILE)
+
 clean:
 	rm -f $(OBJ) *.gc*
 	rm -f $(LIB_DIR)*.o
@@ -73,5 +79,6 @@ clean:
 
 fclean: 	clean
 	rm -f $(NAME) $(UT) a.out *.so
+	rm -rf ./html ./latex
 
 re: 	fclean all

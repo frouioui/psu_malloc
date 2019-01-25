@@ -5,11 +5,23 @@
 ** Source file of the list functions
 */
 
+/**
+ * \file lists.c
+ * \brief File that contains the list management
+ *  functions
+ * \author Florent POINSARD
+ * \author Cécile CADOUL
+ */
+
 #include <stdlib.h>
 #include "malloc.h"
 
-// Need to split the node, inserting a new node just ahead of
-// the given one.
+/**
+ * \fn void split_node(node_t *node)
+ * \brief Need to split the node, inserting a new node just ahead of
+ *        the given one.
+ * \param[in] node Node to be split.
+ */
 static void split_node(node_t *node)
 {
     node_t *new = NULL;
@@ -22,6 +34,13 @@ static void split_node(node_t *node)
     node->next = new;
 }
 
+/**
+ * \fn void *add_to_allocated_list(node_t *to_add)
+ * \brief Need to split the node, inserting a new node just ahead of
+ *        the given one.
+ * \param[in] to_add Node to add to the allocated nodes list.
+ * \return New allocated node
+ */
 static void *add_to_allocated_list(node_t *to_add)
 {
     node_t *index_n = NULL;
@@ -44,6 +63,12 @@ static void *add_to_allocated_list(node_t *to_add)
     return (NULL);
 }
 
+/**
+ * \fn void *check_free_list(size_t size)
+ * \brief Check if there is a free node large enough to hold the new allocation
+ * \param[in] size Size requested for the new allocation.
+ * \return Address of a large enough node or NULL
+ */
 void *check_free_list(size_t size)
 {
     node_t *index = NULL;
@@ -63,6 +88,12 @@ void *check_free_list(size_t size)
     return (NULL);
 }
 
+/**
+ * \fn void *check_allocate_list(size_t size)
+ * \brief Check if there is enough place to add a new node in allocation list
+ * \param[in] size Size requested for the new allocation.
+ * \return Address of a new allocated node or NULL
+ */
 void *check_allocate_list(size_t size)
 {
     node_t *index_n = NULL;

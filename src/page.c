@@ -5,12 +5,28 @@
 ** Page functions
 */
 
-#include "malloc.h"
+/**
+ * \file page.c
+ * \brief File that contains the page functions
+ * \author Florent POINSARD
+ * \author Cécile CADOUL
+ */
 
-// Default multiplication factor for the page.
-// Number of pagesize that sbrk will ask for to the system.
+#include "malloc.h"
+/**
+ * \var size_t DEFAULT_MULTIPLICATION_FACTOR
+ * \brief Default multiplication factor for the page.
+ *
+ * Number of pagesize that sbrk will ask for to the system.
+ */
 const size_t DEFAULT_MULTIPLICATION_FACTOR = 32;
 
+/**
+ * \fn static size_t get_alloc_size(size_t size)
+ * \brief Return the allocation size needed.
+ * \param[in] size Size requested by the user.
+ * \return Allocation size calculated from the size requested.
+ */
 static size_t get_alloc_size(size_t size)
 {
     size_t alloc_size = getpagesize();
@@ -23,7 +39,12 @@ static size_t get_alloc_size(size_t size)
     return (alloc_size);
 }
 
-// Create a brand new page.
+/**
+ * \fn page_t *new_page(size_t size)
+ * \brief Create a brand new page.
+ * \param[in] size Size requested by the user.
+ * \return A brand new page.
+ */
 page_t *new_page(size_t size)
 {
     size_t alloc_size = get_alloc_size(size);
@@ -43,7 +64,12 @@ page_t *new_page(size_t size)
     return (new);
 }
 
-// Allocates a new page and then will create a new node.
+/**
+ * \fn void *allocate_new_page_and_node(size_t size)
+ * \brief Allocates a new page and then will create a new node.
+ * \param[in] size Size requested by the user.
+ * \return A new allocated page.
+ */
 void *allocate_new_page_and_node(size_t size)
 {
     page_t *index = head;
