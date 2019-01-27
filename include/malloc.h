@@ -15,7 +15,10 @@ void *malloc(size_t size);
 void free(void *address);
 void *realloc(void *ptr, size_t size);
 
-extern pthread_mutex_t lock;
+// DEBUG
+void my_putstr(char *str);
+void my_putnbr(int nb);
+
 extern page_t *head;
 
 #endif /* !MALLOC_H_ */

@@ -5,6 +5,9 @@
 ## Makefile for compilation
 ##
 
+## ----------- Documentation ------------ ##
+DOC_FILE	=	Doxyfile
+
 ## ------------- UNIT TESTS ------------- ##
 CC	=	gcc -fPIC $(INCLUDE) -g3
 
@@ -42,7 +45,7 @@ HEADER	=	-L. -lmy_malloc.so
 
 INCLUDE	=	-I./include/
 
-CFLAGS	=	-W -Wall -Wextra -Werror -pedantic $(HEADER)
+CFLAGS	=	-W -Wall -Wextra -Werror $(HEADER)
 
 LDFLAGS	=	-lcriterion -lgcov -coverage
 
@@ -56,6 +59,9 @@ all:	$(NAME)
 
 $(NAME): lib
 
+main:
+	$(CC) $(SRC) $(MAIN) $(INCLUDE)
+
 lib: $(LIB_OBJ)
 	$(CC) -fPIC -shared -o $(LIB_NAME) $(LIB_OBJ)
 
@@ -66,6 +72,9 @@ tests_run:
 	gcc -o $(UT) $(UT_SRC) $(SRC) $(CFLAGS) $(LDFLAGS)
 	./$(UT)
 
+doxygen:
+	doxygen $(DOC_FILE)
+
 clean:
 	rm -f $(OBJ) *.gc*
 	rm -f $(LIB_DIR)*.o
@@ -73,5 +82,6 @@ clean:
 
 fclean: 	clean
 	rm -f $(NAME) $(UT) a.out *.so
+	rm -rf ./html ./latex
 
 re: 	fclean all

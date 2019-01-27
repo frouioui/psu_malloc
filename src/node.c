@@ -5,16 +5,25 @@
 ** Node functions
 */
 
+/**
+ * \file node.c
+ * \brief File that contains the node functions
+ * \author Florent POINSARD
+ * \author Cécile CADOUL
+ */
+
 #include "node.h"
 #include <unistd.h>
 
-const size_t addr_size = 8;
-const size_t bool_size = 8;
-const size_t size_t_size = 8;
-
 /**
-*
-*/
+ * \fn void *my_sbrk(node_t *previous)
+ * \brief Our own srbk function for sub-allocation.
+ * \param[in] previous Previous node allocated in this page.
+ * \return Address of the next node allocated.
+ *
+ * Receives the previous node in parameter and return
+ * the adrress of the next node.
+ */
 void *my_sbrk(node_t *previous)
 {
     char *tmp = (char *)(previous + 1);
@@ -25,6 +34,15 @@ void *my_sbrk(node_t *previous)
     return ((void *)tmp);
 }
 
+/**
+ * \fn void *init_node(node_t *node, size_t size)
+ * \brief Initalizes node fields.
+ * \param[in] node Node to be initialized.
+ * \param[in] size Size requested for the allocation.
+ * \return Address of the data inside the node.
+ *
+ * Initializes all node's fields and returns the address needed by the user.
+ */
 void *init_node(node_t *node, size_t size)
 {
     node->node_size = size;
