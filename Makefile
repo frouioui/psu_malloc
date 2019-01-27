@@ -45,7 +45,7 @@ HEADER	=	-L. -lmy_malloc.so
 
 INCLUDE	=	-I./include/
 
-CFLAGS	=	-W -Wall -Wextra -Werror -pedantic $(HEADER)
+CFLAGS	=	-W -Wall -Wextra -Werror $(HEADER)
 
 LDFLAGS	=	-lcriterion -lgcov -coverage
 
@@ -58,6 +58,9 @@ NAME	=	exec
 all:	$(NAME)
 
 $(NAME): lib
+
+main:
+	$(CC) $(SRC) $(MAIN) $(INCLUDE)
 
 lib: $(LIB_OBJ)
 	$(CC) -fPIC -shared -o $(LIB_NAME) $(LIB_OBJ)

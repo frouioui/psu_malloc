@@ -73,18 +73,25 @@ void *check_free_list(size_t size)
 {
     node_t *index = NULL;
 
-    if (head->node_freed == NULL)
+    // my_putstr("ENTER CHECK FREE LIST FUNCTION\n");
+    if (head->node_freed == NULL) {
+        // my_putstr("CHECK FREE LIST - NOTHING FOUND\n");
         return (NULL);
+    }
+    // my_putstr("CHECK FREE LIST -- IN\n");
     index = head->node_freed;
     while (index != NULL) {
         if (size <= index->node_size / 2 + sizeof(node_t)) {
             split_node(index);
+            // my_putstr("FOUND A FREED NODE IN SPLIT\n");
             return (add_to_allocated_list(index));
         } else if (size <= index->node_size) {
+            // my_putstr("FOUND A PERFECT FREED NODE\n");
             return (add_to_allocated_list(index));
         }
         index = index->next;
     }
+    // my_putstr("DID NOT FIND ANYTHING\n");
     return (NULL);
 }
 
@@ -99,20 +106,26 @@ void *check_allocate_list(size_t size)
     node_t *index_n = NULL;
     node_t *new = NULL;
     page_t *index_p = head;
+    void *ret = NULL;
 
-    for (size_t total_size = 0; index_p; total_size = 0) {
+    // my_putstr("ENTER CHECK_ALLOCATE_LIST\n");
+    for (size_t total_size = 0; index_p && ret == NULL; total_size = 0) {
         index_n = index_p->node_allocated;
         while (index_n != NULL && index_n->next != NULL) {
             index_n = index_n->next;
             total_size += sizeof(node_t) + index_n->node_size;
         }
         if (total_size + size + sizeof(node_t) <= index_p->pagesize) {
+            // my_putstr("WE FOUND SOMETING IN CHECK_ALLOCATE_LIST\n");
             new = my_sbrk(index_n);
             (index_n != NULL) ? (index_n->next = new) : (index_n = new);
             (index_n == new) ? (new->before = NULL) : (new->before = index_n);
-            return (init_node(new, size));
+            ret = init_node(new, size);
+            add_to_allocated_list(new);
+            // my_putstr("END OF FOUND SOMETHING\n");
         }
         index_p = index_p->next;
     }
-    return (NULL);
+    // my_putstr("LEAVING CHECK_ALLOCATE_LIST\n");
+    return (ret);
 }

@@ -13,7 +13,7 @@
  */
 
 #ifndef PAGE_H_
-	#define PAGE_H_
+#define PAGE_H_
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -42,5 +42,6 @@ page_t *new_page(size_t size);
 void *allocate_new_page_and_node(size_t size);
 void *check_allocate_list(size_t size);
 void *check_free_list(size_t size);
+void change_list(page_t *page, node_t *to_move);
 
 #endif /* !PAGE_H_ */

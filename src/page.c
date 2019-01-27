@@ -13,6 +13,9 @@
  */
 
 #include "malloc.h"
+#include "node.h"
+#include "page.h"
+
 /**
  * \var size_t DEFAULT_MULTIPLICATION_FACTOR
  * \brief Default multiplication factor for the page.
@@ -50,6 +53,8 @@ page_t *new_page(size_t size)
     size_t alloc_size = get_alloc_size(size);
     page_t *new = NULL;
 
+    // write(1, "NEW PAGE ---------\n", 19);
+
     new = sbrk(alloc_size);
     new->before = NULL;
     new->next = NULL;
@@ -84,4 +89,25 @@ void *allocate_new_page_and_node(size_t size)
     } else
         index = new_page(size);
     return (check_allocate_list(size));
+}
+
+void change_list(page_t *page, node_t *to_move)
+{
+    node_t *freed = page->node_freed;
+
+    if (to_move->before) {
+        to_move->before->next = to_move->next;
+    } else {
+        page->node_allocated = to_move->next;
+        to_move->next->before = NULL;
+    }
+    while (freed && freed->next)
+        freed = freed->next;
+    to_move->next = NULL;
+    to_move->before = NULL;
+    if (freed == NULL) {
+        page->node_freed = to_move;
+    } else if (freed->next == NULL) {
+        freed->next = to_move;
+    }
 }
