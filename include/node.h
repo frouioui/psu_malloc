@@ -36,6 +36,6 @@ typedef struct node_s {
 } node_t;
 
 void *init_node(node_t *node, size_t size);
-void *my_sbrk(node_t *previous);
+void *my_sbrk(void *parrent_of_node);
 
 #endif /* !NODE_H_ */

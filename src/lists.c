@@ -15,6 +15,8 @@
 
 #include <stdlib.h>
 #include "malloc.h"
+#include "node.h"
+#include "page.h"
 
 /**
  * \fn void split_node(node_t *node)
@@ -22,16 +24,20 @@
  *        the given one.
  * \param[in] node Node to be split.
  */
-static void split_node(node_t *node)
+void split_node(node_t *node)
 {
     node_t *new = NULL;
 
-    new = (void*)(node + sizeof(node_t) + node->node_size);
-    new->data_addr = (void*)(new + sizeof(node_t));
+    new = (void *)((void *)node + sizeof(node_t) + node->node_size / 2);
+    new->data_addr = (void *)((void *)new + sizeof(node_t));
     new->used = false;
-    new->next = node->next->next;
-    new->before = node;
+    if (node->next != NULL)
+        node->next->before = new;
+    new->next = node->next;
     node->next = new;
+    new->before = node;
+    node->node_size /= 2;
+    node->next->node_size = node->node_size;
 }
 
 /**
@@ -49,16 +55,53 @@ static void *add_to_allocated_list(node_t *to_add)
     for (size_t total = 0; index_p; total = 0) {
         index_n = index_p->node_allocated;
         while (index_n != NULL && index_n->next != NULL) {
-            index_n = index_n->next;
             total += sizeof(node_t) + index_n->node_size;
+            index_n = index_n->next;
         }
         if (total + to_add->node_size + sizeof(node_t) <= index_p->pagesize) {
             (index_n != NULL) ? (index_n->next = to_add) : (index_n = to_add);
             (index_n == to_add) ? (to_add->before = NULL) :
-            (to_add->before = index_n);
-            return (init_node(to_add, to_add->node_size));
+                (to_add->before = index_n);
+            to_add->next = NULL;
+            return ((void *)to_add->data_addr);
         }
         index_p = index_p->next;
+    }
+    return (NULL);
+}
+
+static size_t calcul_size_in_page(page_t *page)
+{
+    size_t size = 0;
+    node_t *alloc = page->node_allocated;
+    node_t *freed = page->node_freed;
+
+    while (alloc) {
+        size += alloc->node_size + sizeof(node_t);
+        alloc = alloc->next;
+    }
+    while (freed) {
+        size += freed->node_size + sizeof(node_t);
+        freed = freed->next;
+    }
+    return (size);
+}
+
+static void *check_page_for_free(page_t *page, size_t size)
+{
+    node_t *index = NULL;
+
+    index = page->node_freed;
+    while (index != NULL) {
+        if (size <= index->node_size / 2 + sizeof(node_t) * 2) {
+            // split_node(index);
+            page->node_freed = remove_from_free_list(page, index);
+            return (add_to_allocated_list(index));
+        } else if (size <= index->node_size) {
+            page->node_freed = remove_from_free_list(page, index);
+            return (add_to_allocated_list(index));
+        }
+        index = index->next;
     }
     return (NULL);
 }
@@ -71,27 +114,15 @@ static void *add_to_allocated_list(node_t *to_add)
  */
 void *check_free_list(size_t size)
 {
-    node_t *index = NULL;
+    void *ret = NULL;
+    page_t *page = head;
 
-    // my_putstr("ENTER CHECK FREE LIST FUNCTION\n");
-    if (head->node_freed == NULL) {
-        // my_putstr("CHECK FREE LIST - NOTHING FOUND\n");
-        return (NULL);
+    while (page != NULL) {
+        ret = check_page_for_free(page, size);
+        if (ret != NULL)
+            return (ret);
+        page = page->next;
     }
-    // my_putstr("CHECK FREE LIST -- IN\n");
-    index = head->node_freed;
-    while (index != NULL) {
-        if (size <= index->node_size / 2 + sizeof(node_t)) {
-            split_node(index);
-            // my_putstr("FOUND A FREED NODE IN SPLIT\n");
-            return (add_to_allocated_list(index));
-        } else if (size <= index->node_size) {
-            // my_putstr("FOUND A PERFECT FREED NODE\n");
-            return (add_to_allocated_list(index));
-        }
-        index = index->next;
-    }
-    // my_putstr("DID NOT FIND ANYTHING\n");
     return (NULL);
 }
 
@@ -103,29 +134,14 @@ void *check_free_list(size_t size)
  */
 void *check_allocate_list(size_t size)
 {
-    node_t *index_n = NULL;
-    node_t *new = NULL;
     page_t *index_p = head;
-    void *ret = NULL;
 
-    // my_putstr("ENTER CHECK_ALLOCATE_LIST\n");
-    for (size_t total_size = 0; index_p && ret == NULL; total_size = 0) {
-        index_n = index_p->node_allocated;
-        while (index_n != NULL && index_n->next != NULL) {
-            index_n = index_n->next;
-            total_size += sizeof(node_t) + index_n->node_size;
-        }
+    for (size_t total_size = 0; index_p; total_size = 0) {
+        total_size = calcul_size_in_page(index_p);
         if (total_size + size + sizeof(node_t) <= index_p->pagesize) {
-            // my_putstr("WE FOUND SOMETING IN CHECK_ALLOCATE_LIST\n");
-            new = my_sbrk(index_n);
-            (index_n != NULL) ? (index_n->next = new) : (index_n = new);
-            (index_n == new) ? (new->before = NULL) : (new->before = index_n);
-            ret = init_node(new, size);
-            add_to_allocated_list(new);
-            // my_putstr("END OF FOUND SOMETHING\n");
+            return (create_new_node(index_p, size));
         }
         index_p = index_p->next;
     }
-    // my_putstr("LEAVING CHECK_ALLOCATE_LIST\n");
-    return (ret);
+    return (NULL);
 }

@@ -20,10 +20,11 @@ UT	=	units
 ## ------------- SHARED LIB ------------- ##
 LIB_DIR	= 	./src/
 
-LIB_SRC	= 	$(LIB_DIR)lists.c	\
-			$(LIB_DIR)malloc.c	\
-			$(LIB_DIR)node.c	\
-			$(LIB_DIR)page.c	\
+LIB_SRC	= 	$(LIB_DIR)lists.c		\
+			$(LIB_DIR)malloc.c		\
+			$(LIB_DIR)node.c		\
+			$(LIB_DIR)page.c		\
+			$(LIB_DIR)lists_free.c	\
 
 LIB_NAME	=	libmy_malloc.so
 
@@ -33,10 +34,11 @@ LIB_FLAG	=
 
 SRC_DIR	= ./src/
 
-SRC	=	$(SRC_DIR)lists.c	\
-		$(SRC_DIR)malloc.c	\
-		$(SRC_DIR)node.c	\
-		$(SRC_DIR)page.c	\
+SRC	=	$(SRC_DIR)lists.c		\
+		$(SRC_DIR)malloc.c		\
+		$(SRC_DIR)node.c		\
+		$(SRC_DIR)lists_free.c	\
+		$(SRC_DIR)page.c		\
 
 MAIN	=	$(SRC_DIR)main.c
 

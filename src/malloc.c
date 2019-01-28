@@ -18,6 +18,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "page.h"
+#include "malloc.h"
 
 /**
  * \var pthread_mutex_t lock
@@ -73,8 +74,9 @@ page_t *head = NULL;
 void *malloc(size_t size)
 {
     void *address = NULL;
-
+    
     pthread_mutex_lock(&lock);
+    size = calcul_size_allocation(size);
 
     // BEGIN DEBUG
     // static size_t total_alloc = 0;
@@ -123,8 +125,8 @@ void free(void *address)
 
     while (current && freed == false) {
         while (node && freed == false) {
-            (node == address) ? (change_list(current, node)) : (1);
-            (node == address) ? (freed = true) : (freed = false);
+            (node->data_addr == address) ? (change_list(current, node)) : (1);
+            (node->data_addr == address) ? (freed = true) : (freed = false);
             node = node->next;
         }
         current = current->next;

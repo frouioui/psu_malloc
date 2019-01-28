@@ -42,6 +42,16 @@ static size_t get_alloc_size(size_t size)
     return (alloc_size);
 }
 
+size_t calcul_size_allocation(size_t size)
+{
+    size_t res = 2;
+
+    while (res < size) {
+        res *= 2;
+    }
+    return (res);
+}
+
 /**
  * \fn page_t *new_page(size_t size)
  * \brief Create a brand new page.
@@ -99,7 +109,8 @@ void change_list(page_t *page, node_t *to_move)
         to_move->before->next = to_move->next;
     } else {
         page->node_allocated = to_move->next;
-        to_move->next->before = NULL;
+        if (to_move->next)
+            to_move->next->before = NULL;
     }
     while (freed && freed->next)
         freed = freed->next;

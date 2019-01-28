@@ -12,8 +12,9 @@
  * \author Cécile CADOUL
  */
 
-#include "node.h"
 #include <unistd.h>
+#include "node.h"
+#include "page.h"
 
 /**
  * \fn void *my_sbrk(node_t *previous)
@@ -24,14 +25,41 @@
  * Receives the previous node in parameter and return
  * the adrress of the next node.
  */
-void *my_sbrk(node_t *previous)
+void *my_sbrk(void *parrent_of_node)
 {
-    char *tmp = (char *)(previous + 1);
+    page_t *page = parrent_of_node;
+    void *biggest = page + 1;
+    node_t *current = page->node_allocated;
 
-    if (previous->data_addr == NULL)
-        return ((void*)previous);
-    tmp += previous->node_size;
-    return ((void *)tmp);
+    if (page->node_allocated == NULL && page->node_freed == NULL)
+        return ((void *)page + sizeof(page_t));
+    while (current) {
+        if ((void *)(current->data_addr + current->node_size) > biggest)
+            biggest = (void *)(current->data_addr + current->node_size);
+        current = current->next;
+    }
+    current = page->node_freed;
+    while (current) {
+        if ((void *)(current->data_addr + current->node_size) > biggest)
+            biggest = (void *)(current->data_addr + current->node_size);
+        current = current->next;
+    }
+    return (biggest );
+}
+
+static void insert_node_in_page(page_t *page, node_t *node)
+{
+    node_t *current_node = page->node_allocated;
+
+    if (current_node == NULL) {
+        page->node_allocated = node;
+        return;
+    }
+    while (current_node->next)
+        current_node = current_node->next;
+    current_node->next = node;
+    node->before = current_node;
+    node->next = NULL;
 }
 
 /**
@@ -49,5 +77,17 @@ void *init_node(node_t *node, size_t size)
     node->used = true;
     node->data_addr = (void *)(node + 1);
     node->next = NULL;
+    node->before = NULL;
     return (node->data_addr);
+}
+
+void *create_new_node(page_t *page, size_t size)
+{
+    node_t *new = NULL;
+    void *ret = NULL;
+
+    new = my_sbrk(page);
+    ret = init_node(new, size);
+    insert_node_in_page(page, new);
+    return (ret);
 }
