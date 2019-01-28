@@ -13,14 +13,14 @@
 
 node_t *head = NULL;
 
-// static size_t power_it(size_t size)
-// {
-//     size_t res = getpagesize();
+static size_t power_it(size_t size)
+{
+    size_t res = getpagesize();
 
-//     while (res <= size)
-//         res *= 2;
-//     return (res);
-// }
+    while (res <= size)
+        res *= 2;
+    return (res);
+}
 
 node_t *init_node(size_t size)
 {
@@ -37,7 +37,7 @@ void *malloc(size_t size)
 {
     node_t *index = head;
 
-    size = ALIGN(size + sizeof(node_t));
+    size = ALIGN(power_it(size));
     while (index && (index->next || (!index->used && size <= index->size)))
         index = index->next;
     if (index && index->used == false && size <= index->size) {
@@ -50,7 +50,6 @@ void *malloc(size_t size)
         head = init_node(size);
         return (head->data);
     }
-    write(1, "CLA\n", 4);
     return (NULL);
 }
 
@@ -78,7 +77,7 @@ void *realloc(void *ptr, size_t size)
         return (ptr);
     } else if (ptr != NULL) {
         new = malloc(size);
-        new = memcpy(ptr, ptr, node->size);
+        new = memcpy(new, ptr, node->size);
         free(ptr);
         return (new);
     }
