@@ -32,11 +32,12 @@ const size_t DEFAULT_MULTIPLICATION_FACTOR = 32;
  */
 static size_t get_alloc_size(size_t size)
 {
+    size_t real_size = size + sizeof(page_t) + sizeof(node_t);
     size_t alloc_size = getpagesize();
     size_t times = 2;
 
     alloc_size *= DEFAULT_MULTIPLICATION_FACTOR;
-    for (; alloc_size < size; times += times) {
+    for (; alloc_size < real_size; times += times) {
         alloc_size *= times;
     }
     return (alloc_size);

@@ -23,7 +23,7 @@
  * \var pthread_mutex_t lock
  * Lock mutex needed to manage thread.
  */
-pthread_mutex_t lock;
+pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
 /**
  * \var page_t *head
@@ -131,7 +131,13 @@ void free(void *address)
     }
 }
 
-// void *realloc(void *ptr, size_t size)
-// {
-    
-// }
+void *realloc(void *ptr, size_t size)
+{
+    if (ptr == NULL)
+        return (malloc(size));
+    if (ptr != NULL && size == 0) {
+        free(ptr);
+        return (ptr);
+    }
+    return (ptr);
+}
