@@ -22,7 +22,7 @@
  *
  * Number of pagesize that sbrk will ask for to the system.
  */
-const size_t DEFAULT_MULTIPLICATION_FACTOR = 32;
+const size_t DEFAULT_MULTIPLICATION_FACTOR = 16;
 
 /**
  * \fn static size_t get_alloc_size(size_t size)
