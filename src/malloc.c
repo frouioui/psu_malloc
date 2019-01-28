@@ -32,36 +32,36 @@ pthread_mutex_t lock;
  */
 page_t *head = NULL;
 
-// void my_putchar(char c)
-// {
-//     write(1, &c, 1);
-// }
+void my_putchar(char c)
+{
+    write(1, &c, 1);
+}
 
-// void my_putstr(char *str)
-// {
-//     for (unsigned int i = 0; str[i]; i++)
-//         my_putchar(str[i]);
-// }
+void my_putstr(char *str)
+{
+    for (unsigned int i = 0; str[i]; i++)
+        my_putchar(str[i]);
+}
 
-// void my_putnbr(int nb)
-// {
-//     int modulo;
+void my_putnbr(int nb)
+{
+    int modulo;
 
-//     modulo = 0;
-//     if (nb <= 9 && nb >= 0)
-//         my_putchar(nb + '0');
-//     if (nb < 0) {
-//         my_putchar('-');
-//         nb = nb * (- 1);
-//         if (nb <= 9 && nb >=0)
-//         my_putnbr(nb);
-//     }
-//     if (nb > 9) {
-//         modulo = nb % 10;
-//         my_putnbr(nb / 10);
-//         my_putchar(modulo + '0');
-//     }
-// }
+    modulo = 0;
+    if (nb <= 9 && nb >= 0)
+        my_putchar(nb + '0');
+    if (nb < 0) {
+        my_putchar('-');
+        nb = nb * (- 1);
+        if (nb <= 9 && nb >=0)
+        my_putnbr(nb);
+    }
+    if (nb > 9) {
+        modulo = nb % 10;
+        my_putnbr(nb / 10);
+        my_putchar(modulo + '0');
+    }
+}
 
 /**
  * \fn void *malloc(size_t size)
@@ -71,7 +71,7 @@ page_t *head = NULL;
  *
  * Receives a size in parameter and realises a memory allocation.
  */
-void *my_malloc(size_t size)
+void *malloc(size_t size)
 {
     void *address = NULL;
     
@@ -79,13 +79,13 @@ void *my_malloc(size_t size)
     size = calcul_size_allocation(size);
 
     // BEGIN DEBUG
-    // static size_t total_alloc = 0;
-    // total_alloc += size;
-    // write(1, "malloc\n", 7);
-    // my_putnbr(size);
-    // write(1, "\n", 1);
-    // my_putnbr(total_alloc);
-    // write(1, "\n", 1);
+    static size_t total_alloc = 0;
+    total_alloc += size;
+    write(1, "malloc\n", 7);
+    my_putnbr(size);
+    write(1, "\n", 1);
+    my_putnbr(total_alloc);
+    write(1, "\n", 1);
     // END DEBUG
 
     if (head == NULL) {
@@ -102,7 +102,7 @@ void *my_malloc(size_t size)
     if (address == NULL)
         address = allocate_new_page_and_node(size);
     pthread_mutex_unlock(&lock);
-    // my_putstr("FINISH\n");
+    my_putstr("FINISH\n");
     return (address);
 }
 
@@ -113,14 +113,14 @@ void *my_malloc(size_t size)
  *
  * Receives an adress in parameter and release its allocated memory.
  */
-void my_free(void *address)
+void free(void *address)
 {
     page_t *current = head;
     node_t *node = current->node_allocated;
     bool freed = false;
 
     // BEGIN DEBUG
-    // write(1, "free\n", 5);
+    my_putstr("BEGIN FREE -----------\n");
     // END DEBUG
 
     while (current && freed == false) {
@@ -131,6 +131,7 @@ void my_free(void *address)
         }
         current = current->next;
     }
+    my_putstr("END FREE ------------\n");
 }
 
 // void *realloc(void *ptr, size_t size)

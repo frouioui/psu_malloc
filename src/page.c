@@ -79,6 +79,22 @@ page_t *new_page(size_t size)
     return (new);
 }
 
+page_t *new_empty_page(size_t size)
+{
+    size_t alloc_size = get_alloc_size(size);
+    page_t *new = NULL;
+
+    // write(1, "NEW PAGE ---------\n", 19);
+
+    new = sbrk(alloc_size);
+    new->before = NULL;
+    new->next = NULL;
+    new->pagesize = alloc_size;
+    new->node_allocated = NULL;
+    new->node_freed = NULL;
+    return (new);
+}
+
 /**
  * \fn void *allocate_new_page_and_node(size_t size)
  * \brief Allocates a new page and then will create a new node.
@@ -90,14 +106,14 @@ void *allocate_new_page_and_node(size_t size)
     page_t *index = head;
 
     if (index == NULL)
-        index = new_page(size);
+        index = new_empty_page(size);
     while (index != NULL && index->next != NULL)
         index = index->next;
     if (index != NULL) {
-        index->next = new_page(size);
+        index->next = new_empty_page(size);
         index->next->before = index;
     } else
-        index = new_page(size);
+        index = new_empty_page(size);
     return (check_allocate_list(size));
 }
 
