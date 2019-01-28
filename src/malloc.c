@@ -77,7 +77,7 @@ void *realloc(void *ptr, size_t size)
         return (ptr);
     } else if (ptr != NULL) {
         new = malloc(size);
-        new = memcpy(new, ptr, node->size);
+        new = memcpy(ptr, ptr, node->size);
         free(ptr);
         return (new);
     }
