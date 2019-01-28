@@ -123,7 +123,8 @@ void change_list(page_t *page, node_t *to_move)
 
     if (to_move->before) {
         to_move->before->next = to_move->next;
-        to_move->next->before = to_move->before;
+        if (to_move->next)
+            to_move->next->before = to_move->before;
     } else {
         page->node_allocated = to_move->next;
         if (to_move->next)
