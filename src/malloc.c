@@ -1,137 +1,72 @@
 /*
 ** EPITECH PROJECT, 2019
-** PSU_2018_malloc
+** malloc
 ** File description:
-** Source file of the malloc function
+** Main file of the malloc fuctions
 */
 
-/**
- * \file malloc.c
- * \brief File that contains the main functions
- * \author Florent POINSARD
- * \author Cécile CADOUL
- */
-
-#include <pthread.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
-#include "page.h"
+#include "malloc.h"
 
-/**
- * \var pthread_mutex_t lock
- * Lock mutex needed to manage thread.
- */
-pthread_mutex_t lock;
+node_t *head = NULL;
 
-/**
- * \var page_t *head
- * Head of the allocated pages.
- */
-page_t *head = NULL;
-
-// void my_putchar(char c)
-// {
-//     write(1, &c, 1);
-// }
-
-// void my_putstr(char *str)
-// {
-//     for (unsigned int i = 0; str[i]; i++)
-//         my_putchar(str[i]);
-// }
-
-// void my_putnbr(int nb)
-// {
-//     int modulo;
-
-//     modulo = 0;
-//     if (nb <= 9 && nb >= 0)
-//         my_putchar(nb + '0');
-//     if (nb < 0) {
-//         my_putchar('-');
-//         nb = nb * (- 1);
-//         if (nb <= 9 && nb >=0)
-//         my_putnbr(nb);
-//     }
-//     if (nb > 9) {
-//         modulo = nb % 10;
-//         my_putnbr(nb / 10);
-//         my_putchar(modulo + '0');
-//     }
-// }
-
-/**
- * \fn void *malloc(size_t size)
- * \brief Main malloc function.
- * \param[in] size Size to be allocated.
- * \return Address of the allocated memory.
- *
- * Receives a size in parameter and realises a memory allocation.
- */
-void *malloc(size_t size)
+static size_t power_it(size_t size)
 {
-    void *address = NULL;
+    size_t res = getpagesize();
 
-    pthread_mutex_lock(&lock);
-
-    // BEGIN DEBUG
-    // static size_t total_alloc = 0;
-    // total_alloc += size;
-    // write(1, "malloc\n", 7);
-    // my_putnbr(size);
-    // write(1, "\n", 1);
-    // my_putnbr(total_alloc);
-    // write(1, "\n", 1);
-    // END DEBUG
-
-    if (head == NULL) {
-        head = new_page(size);
-        pthread_mutex_unlock(&lock);
-        return (head->node_allocated->data_addr);
-    }
-    address = check_free_list(size);
-    if (address != NULL) {
-        pthread_mutex_unlock(&lock);
-        return (address);
-    }
-    address = check_allocate_list(size);
-    if (address == NULL)
-        address = allocate_new_page_and_node(size);
-    pthread_mutex_unlock(&lock);
-    // my_putstr("FINISH\n");
-    return (address);
+    while (res <= size)
+        res *= 2;
+    return (res);
 }
 
-/**
- * \fn void free(void * address)
- * \brief Main free function.
- * \param[in] address Memory address to release.
- *
- * Receives an adress in parameter and release its allocated memory.
- */
-void free(void *address)
+node_t *init_node(size_t size)
 {
-    page_t *current = head;
-    node_t *node = current->node_allocated;
-    bool freed = false;
+    node_t *node = sbrk(size);
 
-    // BEGIN DEBUG
-    // write(1, "free\n", 5);
-    // END DEBUG
+    node->used = true;
+    node->size = size - sizeof(node_t);
+    node->next = NULL;
+    node->data = node + 1;
+    return (node);
+}
 
-    while (current && freed == false) {
-        while (node && freed == false) {
-            (node == address) ? (change_list(current, node)) : (1);
-            (node == address) ? (freed = true) : (freed = false);
-            node = node->next;
-        }
-        current = current->next;
+void *malloc(size_t size)
+{
+    node_t *index = head;
+
+    size = ALIGN(power_it(size));
+    while (index && index->next && (!index->used && size <= index->size))
+        index = index->next;
+    if (index && index->used == false && size <= index->size) {
+        index->used = true;
+        return (index->data);
+    } else if (index) {
+        index->next = init_node(size);
+        return (index->next->data);
+    } else {
+        head = init_node(size);
+        return (head->data);
     }
+    return (NULL);
+}
+
+void free(void *node)
+{
+    node_t *index = head;
+
+    if (node == false)
+        return;
+    while (index != NULL && node != (void *)index->data)
+        index = index->next;
+    if (index && node == (void *)index->data)
+        index->used = false;
 }
 
 // void *realloc(void *ptr, size_t size)
 // {
-    
+//     (void)ptr;
+//     (void)size;
+//     write(1, "ra\n", 3);
+//     return (ptr);
 // }

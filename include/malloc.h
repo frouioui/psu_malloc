@@ -1,24 +1,31 @@
 /*
 ** EPITECH PROJECT, 2019
-** PSU_MALLOC
+** malloc
 ** File description:
-** Malloc header
+** header file of the malloc function and struct
 */
 
-#ifndef MALLOC_H_
-	#define MALLOC_H_
+#if !defined(_MALLOC_H)
+#define _MALLOC_H
 
 #include <stdlib.h>
-#include "page.h"
+#include <stdbool.h>
 
-void *malloc(size_t size);
-void free(void *address);
-void *realloc(void *ptr, size_t size);
+#ifdef __x86_64__
+#  define ALIGN(x) ((((x - 1) >> 3) << 3) + 8)
+#else
+#  define ALIGN(x) ((((x - 1) >> 2) << 2) + 4)
+#endif
 
-// DEBUG
-void my_putstr(char *str);
-void my_putnbr(int nb);
+struct node_s {
+    size_t size;
+    void *data;
+    bool used;
+    struct node_s *next;
+};
 
-extern page_t *head;
+typedef struct node_s node_t;
 
-#endif /* !MALLOC_H_ */
+extern node_t *head;
+
+#endif // _MALLOC_H
