@@ -12,9 +12,9 @@
 #include <stdbool.h>
 
 #ifdef __x86_64__
-#  define ALIGN(x) ((((x - 1) >> 3) << 3) + 8)
+    #define ALIGN(x) ((((x - 1) >> 3) << 3) + 8)
 #else
-#  define ALIGN(x) ((((x - 1) >> 2) << 2) + 4)
+    #define ALIGN(x) ((((x - 1) >> 2) << 2) + 4)
 #endif
 
 struct node_s {

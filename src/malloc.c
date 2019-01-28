@@ -7,18 +7,20 @@
 
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <string.h>
 #include "malloc.h"
 
 node_t *head = NULL;
 
-static size_t power_it(size_t size)
-{
-    size_t res = getpagesize();
+// static size_t power_it(size_t size)
+// {
+//     size_t res = getpagesize();
 
-    while (res <= size)
-        res *= 2;
-    return (res);
-}
+//     while (res <= size)
+//         res *= 2;
+//     return (res);
+// }
 
 node_t *init_node(size_t size)
 {
@@ -35,8 +37,8 @@ void *malloc(size_t size)
 {
     node_t *index = head;
 
-    size = ALIGN(power_it(size));
-    while (index && index->next && (!index->used && size <= index->size))
+    size = ALIGN(size + sizeof(node_t));
+    while (index && (index->next || (!index->used && size <= index->size)))
         index = index->next;
     if (index && index->used == false && size <= index->size) {
         index->used = true;
@@ -48,6 +50,7 @@ void *malloc(size_t size)
         head = init_node(size);
         return (head->data);
     }
+    write(1, "CLA\n", 4);
     return (NULL);
 }
 
@@ -63,10 +66,21 @@ void free(void *node)
         index->used = false;
 }
 
-// void *realloc(void *ptr, size_t size)
-// {
-//     (void)ptr;
-//     (void)size;
-//     write(1, "ra\n", 3);
-//     return (ptr);
-// }
+void *realloc(void *ptr, size_t size)
+{
+    node_t *node = (void *)ptr - sizeof(node_t);
+    void *new = NULL;
+
+    if (ptr == NULL)
+        return (malloc(size));
+    if (ptr != NULL && size == 0) {
+        free(ptr);
+        return (ptr);
+    } else if (ptr != NULL) {
+        new = malloc(size);
+        new = memcpy(ptr, ptr, node->size);
+        free(ptr);
+        return (new);
+    }
+    return (ptr);
+}
