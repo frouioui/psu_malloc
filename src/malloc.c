@@ -71,7 +71,7 @@ page_t *head = NULL;
  *
  * Receives a size in parameter and realises a memory allocation.
  */
-void *malloc(size_t size)
+void *my_malloc(size_t size)
 {
     void *address = NULL;
     
@@ -113,7 +113,7 @@ void *malloc(size_t size)
  *
  * Receives an adress in parameter and release its allocated memory.
  */
-void free(void *address)
+void my_free(void *address)
 {
     page_t *current = head;
     node_t *node = current->node_allocated;
