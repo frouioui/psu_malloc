@@ -38,6 +38,7 @@ node_t *init_node(size_t size)
 void *malloc(size_t size)
 {
     node_t *index = head;
+    void *address = NULL;
 
     size = ALIGN(power_it(size));
     while (index && (index->next || (!index->used && size <= index->size)))
@@ -45,19 +46,16 @@ void *malloc(size_t size)
     pthread_mutex_lock(&lock);
     if (index && index->used == false && size <= index->size) {
         index->used = true;
-        pthread_mutex_unlock(&lock);
-        return (index->data);
+        address = index->data;
     } else if (index) {
         index->next = init_node(size);
-        pthread_mutex_unlock(&lock);
-        return (index->next->data);
+        address = index->next->data;
     } else {
         head = init_node(size);
-        pthread_mutex_unlock(&lock);
-        return (head->data);
+        address = head->data;
     }
     pthread_mutex_unlock(&lock);
-    return (NULL);
+    return (address);
 }
 
 void free(void *node)
@@ -68,10 +66,10 @@ void free(void *node)
         return;
     while (index != NULL && node != (void *)index->data)
         index = index->next;
-    // pthread_mutex_lock(&lock);
+    pthread_mutex_lock(&lock);
     if (index && node == (void *)index->data)
         index->used = false;
-    // pthread_mutex_unlock(&lock);
+    pthread_mutex_unlock(&lock);
 }
 
 void *realloc(void *ptr, size_t size)
@@ -86,7 +84,7 @@ void *realloc(void *ptr, size_t size)
         return (ptr);
     } else if (ptr != NULL) {
         new = malloc(size);
-        // pthread_mutex_lock(&lock);
+        pthread_mutex_lock(&lock);
         new = memcpy(ptr, ptr, node->size);
         pthread_mutex_unlock(&lock);
         free(ptr);
