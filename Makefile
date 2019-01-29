@@ -39,7 +39,7 @@ HEADER	=	-L. -lmy_malloc.so
 
 INCLUDE	=	-I./include/
 
-CFLAGS	=	-W -Wall -Wextra -Werror -Wno-restrict $(HEADER)
+CFLAGS	=	-W -Wall -Wextra -Werror -Wno-restrict -lpthread $(HEADER)
 
 LDFLAGS	=	-lcriterion -lgcov -coverage
 
