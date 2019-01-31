@@ -13,11 +13,12 @@
 
 void *realloc(void *ptr, size_t size)
 {
-    node_t *node = (void *)ptr - sizeof(node_t);
+    node_t *node = NULL;
     void *new = NULL;
 
     if (ptr == NULL)
         return (malloc(size));
+    node = (void *)ptr - sizeof(node_t);
     if (size == 0) {
         // free(ptr);
         return (ptr);
@@ -26,7 +27,7 @@ void *realloc(void *ptr, size_t size)
         new = malloc(size);
         // pthread_mutex_lock(&lock);
         write(1, "5", 1);
-        new = memcpy(ptr, ptr, node->size);
+        new = memcpy(new, ptr, node->size);
         // pthread_mutex_unlock(&lock);
         free(ptr);
         write(1, "6\n", 2);
