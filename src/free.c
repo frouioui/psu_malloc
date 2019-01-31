@@ -14,7 +14,7 @@
 void free(void *node)
 {
     // node_t *index = head;
-    write(1, "free\n", sizeof("free\n"));
+    // write(1, "free\n", sizeof("free\n"));
     (void)node;
     // if (node == false)
     //     return;
