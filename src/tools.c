@@ -11,22 +11,111 @@
 #include <string.h>
 #include "malloc.h"
 
-size_t power_it(size_t size)
-{
-    size_t res = getpagesize();
+const size_t MIN_PAGES = 32;
 
-    while (res <= size)
-        res *= 2;
-    return (res);
+void *get_addr(void *addr, size_t offset)
+{
+    write(1, "get_addr\n", sizeof("get_addr\n"));
+    char *new_add = (char *)addr;
+
+    new_add += offset;
+    return ((void *)new_add);
 }
 
-node_t *init_node(size_t size)
+void init_node(node_t *node, size_t size_requested)
 {
-    node_t *node = sbrk(size);
+    write(1, "init_node\n", sizeof("init_node\n"));
+    char *tmp_add = NULL;
 
+    node->size = size_requested;
+    node->data = (void *)(node + 1);
     node->used = true;
-    node->size = size - sizeof(node_t);
     node->next = NULL;
-    node->data = node + 1;
-    return (node);
+    tmp_add = get_addr(node->data, size_requested);
+    node->next_node_addr = (void *)(tmp_add);
+}
+
+size_t get_free_space(void *final_adrress, void *last_address)
+{
+    write(1, "get_free_space\n", sizeof("get_free_space\n"));
+    return ((char *)final_adrress - (char *)last_address);
+}
+
+page_t *create_page_and_node(size_t size_requested)
+{
+    write(1, "create_page_and_node\n", sizeof("create_page_and_node\n"));
+    page_t *page = NULL;
+    size_t page_size = getpagesize() * MIN_PAGES;
+
+    page_size = ALIGN(page_size);
+    page = sbrk(page_size);
+    page->size = page_size;
+    page->full = false;
+    page->next = NULL;
+    page->next_page_addr = sbrk(0);
+    page->node = get_addr(page, ALIGN(sizeof(page_t)));
+    init_node(page->node, size_requested);
+    page->free_space = get_free_space(page->next_page_addr,
+        page->node->next_node_addr);
+    return (page);
+}
+
+page_t *add_new_page_and_node(size_t size_requested)
+{
+    write(1, "add_new_page_and_node\n", sizeof("add_new_page_and_node\n"));
+    page_t *index = head;
+
+    while (index != NULL && index->next != NULL)
+        index = index->next;
+    if (index != NULL)
+        index->next = create_page_and_node(size_requested);
+    return (index->next);
+}
+
+node_t *init_new_node(node_t *previous, size_t size_requested)
+{
+    write(1, "init_new_node\n", sizeof("init_new_node\n"));
+    node_t *new_node = NULL;
+
+    if (!previous)
+        return (NULL);
+    new_node = previous->next_node_addr;
+    init_node(new_node, size_requested);
+    return (new_node);
+}
+
+node_t *add_new_node(node_t *node, size_t free_space, size_t size_requested)
+{
+    write(1, "add_new_node\n", sizeof("add_new_node\n"));
+    node_t *tmp = node;
+
+    if (size_requested + sizeof(node_t) > free_space)
+        return (NULL);
+    while (tmp && tmp->next) {
+        if (tmp->used == false) {
+            if (size_requested <= tmp->size) {
+                tmp->used = true;
+                return (tmp);
+            }
+        }
+        tmp = tmp->next;
+    }
+    if (tmp && !tmp->next) {
+        tmp->next = init_new_node(tmp, size_requested);
+        return (tmp->next);
+    }
+    return (NULL);
+}
+
+void update_free_space(page_t *page)
+{
+    write(1, "update_free_space\n", sizeof("update_free_space\n"));
+    node_t *index = page->node;
+
+    while (index && index->next)
+        index = index->next;
+    page->free_space = get_free_space(page->next_page_addr,
+        index->next_node_addr);
+    if (page->free_space <= sizeof(node_t) + ALIGN(1))
+        page->full = true;
 }

@@ -22,18 +22,35 @@ struct node_s {
     size_t size;
     void *data;
     bool used;
+    void *next_node_addr;
     struct node_s *next;
 };
 
 typedef struct node_s node_t;
 
-extern node_t *head;
+struct page_s {
+    size_t size;
+    bool full;
+    node_t *node;
+    size_t free_space;
+    void *next_page_addr;
+    struct page_s *next;
+};
+
+typedef struct page_s page_t;
+
+extern page_t *head;
 extern pthread_mutex_t lock;
 
 size_t power_it(size_t size);
-node_t *init_node(size_t size);
-void *realloc(void *ptr, size_t size);
-void free(void *node);
-void *malloc(size_t size);
+// node_t *init_node(size_t size);
+page_t *create_page_and_node(size_t size_requested);
+page_t *add_new_page_and_node(size_t size_requested);
+node_t *add_new_node(node_t *node, size_t free_space, size_t size_requested);
+void update_free_space(page_t *page);
+
+// void *realloc(void *ptr, size_t size);
+// void free(void *node);
+void *my_malloc(size_t size);
 
 #endif // _MALLOC_H
