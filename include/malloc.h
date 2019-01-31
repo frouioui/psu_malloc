@@ -28,4 +28,10 @@ typedef struct node_s node_t;
 
 extern node_t *head;
 
+size_t power_it(size_t size);
+node_t *init_node(size_t size);
+void *realloc(void *ptr, size_t size);
+void free(void *node);
+void *malloc(size_t size);
+
 #endif // _MALLOC_H

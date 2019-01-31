@@ -13,26 +13,6 @@
 
 node_t *head = NULL;
 
-static size_t power_it(size_t size)
-{
-    size_t res = getpagesize();
-
-    while (res <= size)
-        res *= 2;
-    return (res);
-}
-
-node_t *init_node(size_t size)
-{
-    node_t *node = sbrk(size);
-
-    node->used = true;
-    node->size = size - sizeof(node_t);
-    node->next = NULL;
-    node->data = node + 1;
-    return (node);
-}
-
 void *malloc(size_t size)
 {
     node_t *index = head;
@@ -51,35 +31,4 @@ void *malloc(size_t size)
         return (head->data);
     }
     return (NULL);
-}
-
-void free(void *node)
-{
-    node_t *index = head;
-
-    if (node == false)
-        return;
-    while (index != NULL && node != (void *)index->data)
-        index = index->next;
-    if (index && node == (void *)index->data)
-        index->used = false;
-}
-
-void *realloc(void *ptr, size_t size)
-{
-    node_t *node = (void *)ptr - sizeof(node_t);
-    void *new = NULL;
-
-    if (ptr == NULL)
-        return (malloc(size));
-    if (ptr != NULL && size == 0) {
-        free(ptr);
-        return (ptr);
-    } else if (ptr != NULL) {
-        new = malloc(size);
-        new = memcpy(ptr, ptr, node->size);
-        free(ptr);
-        return (new);
-    }
-    return (ptr);
 }
