@@ -48,6 +48,7 @@ page_t *create_page_and_node(size_t size_requested);
 page_t *add_new_page_and_node(size_t size_requested);
 node_t *add_new_node(node_t *node, size_t free_space, size_t size_requested);
 void update_free_space(page_t *page);
+void display_memory(page_t *page);
 
 // void *realloc(void *ptr, size_t size);
 // void free(void *node);
