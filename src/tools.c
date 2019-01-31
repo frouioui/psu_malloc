@@ -15,7 +15,6 @@ const size_t MIN_PAGES = 512;
 
 void *get_addr(void *addr, size_t offset)
 {
-    // write(1, "get_addr\n", sizeof("get_addr\n"));
     char *new_add = (char *)addr;
 
     new_add += offset;
@@ -24,7 +23,6 @@ void *get_addr(void *addr, size_t offset)
 
 void init_node(node_t *node, size_t size_requested)
 {
-    // write(1, "init_node\n", sizeof("init_node\n"));
     char *tmp_add = NULL;
 
     node->size = size_requested;
@@ -37,13 +35,11 @@ void init_node(node_t *node, size_t size_requested)
 
 size_t get_free_space(void *final_adrress, void *last_address)
 {
-    // write(1, "get_free_space\n", sizeof("get_free_space\n"));
     return ((char *)final_adrress - (char *)last_address);
 }
 
 page_t *create_page_and_node(size_t size_requested)
 {
-    // write(1, "create_page_and_node\n", sizeof("create_page_and_node\n"));
     page_t *page = NULL;
     size_t page_size = getpagesize() * MIN_PAGES;
 
@@ -53,7 +49,7 @@ page_t *create_page_and_node(size_t size_requested)
     page->size = page_size;
     page->full = false;
     page->next = NULL;
-    page->next_page_addr = get_addr(page, page->size + sizeof(page_t));
+    page->next_page_addr = get_addr(page, page->size);
     page->node = get_addr(page, sizeof(page_t));
     init_node(page->node, size_requested);
     page->free_space = get_free_space(page->next_page_addr,
@@ -63,7 +59,6 @@ page_t *create_page_and_node(size_t size_requested)
 
 page_t *add_new_page_and_node(size_t size_requested)
 {
-    // write(1, "add_new_page_and_node\n", sizeof("add_new_page_and_node\n"));
     page_t *index = head;
 
     while (index != NULL && index->next != NULL)
@@ -75,7 +70,6 @@ page_t *add_new_page_and_node(size_t size_requested)
 
 node_t *init_new_node(node_t *previous, size_t size_requested)
 {
-    // write(1, "init_new_node\n", sizeof("init_new_node\n"));
     node_t *new_node = NULL;
 
     if (!previous)
@@ -85,19 +79,30 @@ node_t *init_new_node(node_t *previous, size_t size_requested)
     return (new_node);
 }
 
+void split_node(node_t *node, size_t size_node_a)
+{
+    node_t *new = node->next_node_addr;
+
+    init_node(node, node->size - size_node_a - sizeof(node_t));
+    new->next = node->next;
+    new->used = false;
+    node->next = new;
+    node->size = size_node_a;
+}
+
 node_t *add_new_node(node_t *node, size_t free_space, size_t size_requested)
 {
-    // write(1, "add_new_node\n", sizeof("add_new_node\n"));
     node_t *tmp = node;
 
     if (size_requested + sizeof(node_t) > free_space)
         return (NULL);
     while (tmp && tmp->next) {
-        if (tmp->used == false) {
-            if (size_requested <= tmp->size) {
-                tmp->used = true;
-                return (tmp);
-            }
+        if (!tmp->used && size_requested + sizeof(node_t) <= tmp->size) {
+            split_node(tmp, size_requested);
+            return (tmp);
+        } else if (tmp->used == false && size_requested <= tmp->size) {
+            tmp->used = true;
+            return (tmp);
         }
         tmp = tmp->next;
     }
@@ -110,7 +115,6 @@ node_t *add_new_node(node_t *node, size_t free_space, size_t size_requested)
 
 void update_free_space(page_t *page)
 {
-    // write(1, "update_free_space\n", sizeof("update_free_space\n"));
     node_t *index = page->node;
 
     while (index && index->next)

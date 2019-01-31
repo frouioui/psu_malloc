@@ -5,6 +5,7 @@
 ** Main file of the malloc fuctions
 */
 
+#include <pthread.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -13,15 +14,24 @@
 
 void free(void *node)
 {
-    // node_t *index = head;
-    // write(1, "free\n", sizeof("free\n"));
-    (void)node;
-    // if (node == false)
-    //     return;
-    // while (index != NULL && node != (void *)index->data)
-    //     index = index->next;
-    // pthread_mutex_lock(&lock);
-    // if (index && node == (void *)index->data)
-    //     index->used = false;
-    // pthread_mutex_unlock(&lock);
+    page_t *p_index = head;
+    node_t *n_index = NULL;
+
+    if (p_index == NULL)
+        return;
+    while (p_index != NULL) {
+        n_index = p_index->node;
+        while (n_index != NULL && node != (void *)n_index->data) {
+            n_index = n_index->next;
+        }
+        p_index = p_index->next;
+    }
+    pthread_mutex_lock(&lock);
+    if (n_index && node == (void *)n_index->data)
+        n_index->used = false;
+    // TODO: merge the next node if it is free = true too
+
+    // TODO: check if the current page is the last one and if it is
+    // we must free its memory.
+    pthread_mutex_unlock(&lock);
 }
