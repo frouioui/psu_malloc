@@ -53,7 +53,7 @@ page_t *create_page_and_node(size_t size_requested)
     page->size = page_size;
     page->full = false;
     page->next = NULL;
-    page->next_page_addr = get_addr(page, page->size + sizeof(page_t));
+    page->next_page_addr = get_addr(page, page->size);
     page->node = get_addr(page, sizeof(page_t));
     init_node(page->node, size_requested);
     page->free_space = get_free_space(page->next_page_addr,
