@@ -10,6 +10,7 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
+#include <pthread.h>
 
 #ifdef __x86_64__
     #define ALIGN(x) ((((x - 1) >> 3) << 3) + 8)
@@ -27,6 +28,7 @@ struct node_s {
 typedef struct node_s node_t;
 
 extern node_t *head;
+extern pthread_mutex_t lock;
 
 size_t power_it(size_t size);
 node_t *init_node(size_t size);

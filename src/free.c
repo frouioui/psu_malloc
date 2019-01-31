@@ -19,6 +19,8 @@ void free(void *node)
         return;
     while (index != NULL && node != (void *)index->data)
         index = index->next;
+    pthread_mutex_lock(&lock);
     if (index && node == (void *)index->data)
         index->used = false;
+    pthread_mutex_unlock(&lock);
 }
