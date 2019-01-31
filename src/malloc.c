@@ -36,7 +36,8 @@ void *malloc(size_t size)
     void *address = NULL;
     page_t *p_index = head;
 
-    write(1, "1", 1);
+    if (size == 0)
+        return (NULL);
     size = ALIGN(size);
     if (p_index == NULL) {
         head = create_page_and_node(size);
