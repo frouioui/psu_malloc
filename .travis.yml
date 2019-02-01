@@ -21,7 +21,7 @@ jobs:
     include :
         - stage: build
           name: "Build"
-          if: branch IN (master, dev, tests)
+          if: branch IN (dev, tests)
           before_script:
             - docker pull epitechcontent/epitest-docker
           script:
@@ -29,7 +29,7 @@ jobs:
 
         - stage: tests
           name: "Functional Tests"
-          if: branch IN (master, dev, tests)
+          if: branch IN (dev, tests)
           before_script:
             - docker pull epitechcontent/epitest-docker
           script:
