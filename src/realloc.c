@@ -20,13 +20,13 @@ void *realloc(void *ptr, size_t size)
         return (malloc(size));
     node = (void *)ptr - sizeof(node_t);
     if (size == 0) {
-        // free(ptr);
+        free(ptr);
         return (ptr);
     } else if (ptr != NULL) {
         new = malloc(size);
-        // pthread_mutex_lock(&lock);
+        pthread_mutex_lock(&lock);
         new = memcpy(new, ptr, node->size);
-        // pthread_mutex_unlock(&lock);
+        pthread_mutex_unlock(&lock);
         free(ptr);
         return (new);
     }

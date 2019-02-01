@@ -90,22 +90,34 @@ void split_node(node_t *node, size_t size_node_a)
     node->size = size_node_a;
 }
 
+void *check_new_node_free(node_t *node, size_t size_requested)
+{
+    if (!node->used && size_requested + sizeof(node_t) <= node->size) {
+        split_node(node, size_requested);
+        return (node);
+    } else if (node->used == false && size_requested <= node->size) {
+        node->used = true;
+        return (node);
+    }
+    return (NULL);
+}
+
 node_t *add_new_node(node_t *node, size_t free_space, size_t size_requested)
 {
     node_t *tmp = node;
+    void *address_tmp = NULL;
 
-    if (size_requested + sizeof(node_t) > free_space) {
+    if (size_requested + sizeof(node_t) > free_space)
         return (NULL);
+    if (tmp && tmp->next == NULL) {
+        address_tmp = check_new_node_free(tmp, size_requested);
+        if (address_tmp != NULL)
+            return (address_tmp);
     }
-    while (tmp && tmp->next) {
-        if (!tmp->used && size_requested + sizeof(node_t) <= tmp->size) {
-            split_node(tmp, size_requested);
-            return (tmp);
-        } else if (tmp->used == false && size_requested <= tmp->size) {
-            tmp->used = true;
-            return (tmp);
-        }
-        tmp = tmp->next;
+    for (; tmp && tmp->next; tmp = tmp->next) {
+        address_tmp = check_new_node_free(tmp, size_requested);
+        if (address_tmp != NULL)
+            return (address_tmp);
     }
     if (tmp && !tmp->next) {
         tmp->next = init_new_node(tmp, size_requested);

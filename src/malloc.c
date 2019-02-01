@@ -45,13 +45,13 @@ void *malloc(size_t size)
     while (p_index) {
         if (p_index->full == false &&
         (address = create_suballocation(p_index, size)) != NULL) {
-            display_memory(head, size);
+            // display_memory(head, size);
             return (address);
         }
         p_index = p_index->next;
     }
     address = add_new_page_and_node(size);
-    display_memory(head, size);
+    // display_memory(head, size);
     return (address);
 }
 
