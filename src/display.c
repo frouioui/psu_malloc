@@ -10,8 +10,6 @@
 #include <string.h>
 #include "malloc.h"
 
-typedef unsigned long ul;
-
 static void display_node(node_t *node, int index)
 {
     char buf[8][100];

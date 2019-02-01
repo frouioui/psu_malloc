@@ -19,8 +19,7 @@ static void *create_suballocation(page_t *page, size_t size_requested)
 {
     node_t *n_index = NULL;
 
-    n_index = add_new_node(page->node, page->free_space,
-                                            size_requested);
+    n_index = add_new_node(page->node, page->free_space, size_requested);
     if (!n_index) {
         return (NULL);
     }

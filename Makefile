@@ -25,6 +25,8 @@ LIB_SRC	= 	$(LIB_DIR)malloc.c	\
 			$(LIB_DIR)realloc.c	\
 			$(LIB_DIR)tools.c	\
 			$(LIB_DIR)display.c	\
+			$(LIB_DIR)node.c	\
+			$(LIB_DIR)page.c	\
 
 LIB_NAME	=	libmy_malloc.so
 
@@ -39,6 +41,8 @@ SRC	=	$(SRC_DIR)malloc.c	\
 		$(SRC_DIR)realloc.c	\
 		$(SRC_DIR)tools.c	\
 		$(LIB_DIR)display.c	\
+		$(LIB_DIR)node.c	\
+		$(LIB_DIR)page.c	\
 
 MAIN	=	$(SRC_DIR)main.c
 

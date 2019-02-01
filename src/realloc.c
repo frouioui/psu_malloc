@@ -23,13 +23,11 @@ void *realloc(void *ptr, size_t size)
         free(ptr);
         return (ptr);
     } else if (ptr != NULL) {
-        // write(1, "4\n", 2);
         new = malloc(size);
         pthread_mutex_lock(&lock);
         new = memcpy(new, ptr, node->size);
         pthread_mutex_unlock(&lock);
         free(ptr);
-        // write(1, "6\n", 2);
         return (new);
     }
     return (ptr);
