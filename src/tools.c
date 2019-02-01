@@ -57,7 +57,7 @@ page_t *create_page_and_node(size_t size_requested)
     return (page);
 }
 
-page_t *add_new_page_and_node(size_t size_requested)
+void *add_new_page_and_node(size_t size_requested)
 {
     page_t *index = head;
 
@@ -65,7 +65,7 @@ page_t *add_new_page_and_node(size_t size_requested)
         index = index->next;
     if (index != NULL)
         index->next = create_page_and_node(size_requested);
-    return (index->next);
+    return (index->next->node->data);
 }
 
 node_t *init_new_node(node_t *previous, size_t size_requested)

@@ -39,22 +39,21 @@ static ul get_addr_dif(ul final_page_addr, ul last_node_addr)
     return (final_page_addr - last_node_addr);
 }
 
-static void display_page_header(page_t *page, int index, size_t size_req)
+static void display_page_header(page_t *page, int index)
 {
-    char buf[5][100];
+    char buf[4][100];
 
-    for (int j= 0; j < 5; j += 1)
+    for (int j= 0; j < 4; j += 1)
         memset(buf[j], '\0', 100);
-    sprintf(buf[0], "[****** MALLOC SIZE REQUESTED: %lu ******]\n", size_req);
-    sprintf(buf[1], "================ Page [%d] ================\n", index);
-    sprintf(buf[2], " -- full: %d\n", page->full);
-    sprintf(buf[3], " -- address: %lu\n", (ul)page);
-    sprintf(buf[4], " -- size: %lu\n", page->size);
+    sprintf(buf[0], "================ Page [%d] ================\n", index);
+    sprintf(buf[1], " -- full: %d\n", page->full);
+    sprintf(buf[2], " -- address: %lu\n", (ul)page);
+    sprintf(buf[3], " -- size: %lu\n", page->size);
     for (int j = 0; j < 4; j += 1)
         write(1, buf[j], strlen(buf[j]));
 }
 
-static void display_page(page_t *page, int index, size_t size_req)
+static void display_page(page_t *page, int index)
 {
     char buf[8][100];
     node_t *tmp = page->node;
@@ -64,7 +63,7 @@ static void display_page(page_t *page, int index, size_t size_req)
         memset(buf[j], '\0', 100);
     while (tmp && tmp->next)
         tmp = tmp->next;
-    display_page_header(page, index, size_req);
+    display_page_header(page, index);
     for (node_t *tmp = page->node; tmp != NULL; tmp = tmp->next, i += 1)
         display_node(tmp, i);
     sprintf(buf[0], " -- next page address: %lu\n", (ul)page->next_page_addr);
@@ -79,8 +78,12 @@ static void display_page(page_t *page, int index, size_t size_req)
 
 void display_memory(page_t *page, size_t size_req)
 {
+    char buf[100];
     int i = 0;
 
+    memset(buf, '\0', 100);
+    sprintf(buf, "[****** MALLOC SIZE REQUESTED: %lu ******]\n", size_req);
+    write(1, buf, strlen(buf));
     for (page_t *index = page; index != NULL; index = index->next, i += 1)
-        display_page(index, i, size_req);
+        display_page(index, i);
 }

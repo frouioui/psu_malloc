@@ -32,7 +32,6 @@ void *create_suballocation(page_t *page, size_t size_requested)
 
 void *malloc(size_t size)
 {
-    // write(1, "malloc\n", sizeof("malloc\n"));
     void *address = NULL;
     page_t *p_index = head;
 
@@ -41,22 +40,18 @@ void *malloc(size_t size)
     size = ALIGN(size);
     if (p_index == NULL) {
         head = create_page_and_node(size);
-        write(1, "2", 1);
-        // display_memory(head, size);
         return (head->node->data);
     }
-    while (p_index && p_index->full == true) {
+    while (p_index) {
+        if (p_index->full == false &&
+        (address = create_suballocation(p_index, size)) != NULL) {
+            display_memory(head, size);
+            return (address);
+        }
         p_index = p_index->next;
     }
-    if (p_index) {
-        address = create_suballocation(p_index, size);
-    }
-    if (!p_index || !address) {
-        p_index->next = add_new_page_and_node(size);
-        address = p_index->next->node->data;
-    }
-    // display_memory(head, size);
-    // write(1, "END malloc\n", sizeof("END malloc\n"));
+    address = add_new_page_and_node(size);
+    display_memory(head, size);
     return (address);
 }
 
