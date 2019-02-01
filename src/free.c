@@ -16,19 +16,31 @@ void free(void *node)
 {
     page_t *p_index = head;
     node_t *n_index = NULL;
-
+    bool find = false;
+    // (void)node;
+    // write(2, "000\n", 4);
     if (p_index == NULL)
         return;
-    while (p_index != NULL) {
+    while (p_index != NULL && !find) {
         n_index = p_index->node;
-        while (n_index != NULL && node != (void *)n_index->data) {
+        // write(2, "001\n", 4);
+        while (n_index != NULL && !find) {
+            // write(2, "002\n", 4);
+            if (node == n_index->data) {
+                write(2, "003\n", 4);
+                find = true;
+            }
             n_index = n_index->next;
         }
         p_index = p_index->next;
     }
+    // write(2, "004\n", 4);
     pthread_mutex_lock(&lock);
-    if (n_index && node == (void *)n_index->data)
+    if (n_index && node == n_index->data) {
         n_index->used = false;
+        write(2, "005\n", 4);
+    }
+    // write(2, "006\n", 4);
     // TODO: merge the next node if it is free = true too
 
     // TODO: check if the current page is the last one and if it is

@@ -17,20 +17,18 @@ void *get_addr(void *addr, size_t offset)
 {
     char *new_add = (char *)addr;
 
+    offset = ALIGN(offset);
     new_add += offset;
     return ((void *)new_add);
 }
 
 void init_node(node_t *node, size_t size_requested)
 {
-    char *tmp_add = NULL;
-
     node->size = size_requested;
-    node->data = (void *)(node + 1);
+    node->data = get_addr(node, sizeof(node_t));
     node->used = true;
     node->next = NULL;
-    tmp_add = get_addr(node->data, size_requested);
-    node->next_node_addr = (void *)(tmp_add);
+    node->next_node_addr = get_addr(node->data, size_requested);
 }
 
 size_t get_free_space(void *final_adrress, void *last_address)
@@ -97,10 +95,11 @@ node_t *add_new_node(node_t *node, size_t free_space, size_t size_requested)
     if (size_requested + sizeof(node_t) > free_space)
         return (NULL);
     while (tmp && tmp->next) {
-        if (!tmp->used && size_requested + sizeof(node_t) <= tmp->size) {
+        /*if (!tmp->used && size_requested + sizeof(node_t) <= tmp->size) {
+            write(1, "7\n", 2);
             split_node(tmp, size_requested);
             return (tmp);
-        } else if (tmp->used == false && size_requested <= tmp->size) {
+        } else */if (tmp->used == false && size_requested <= tmp->size) {
             tmp->used = true;
             return (tmp);
         }

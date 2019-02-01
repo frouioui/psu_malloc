@@ -18,19 +18,19 @@ void *realloc(void *ptr, size_t size)
 
     if (ptr == NULL)
         return (malloc(size));
-    node = (void *)ptr - sizeof(node_t);
+    node = (node_t *)ptr - 1;
     if (size == 0) {
         // free(ptr);
         return (ptr);
     } else if (ptr != NULL) {
-        write(1, "4", 1);
+        // write(1, "4\n", 2);
         new = malloc(size);
-        // pthread_mutex_lock(&lock);
-        write(1, "5", 1);
+        pthread_mutex_lock(&lock);
+        // write(1, "5\n", 2);
         new = memcpy(new, ptr, node->size);
-        // pthread_mutex_unlock(&lock);
+        pthread_mutex_unlock(&lock);
         free(ptr);
-        write(1, "6\n", 2);
+        // write(1, "6\n", 2);
         return (new);
     }
     return (ptr);
