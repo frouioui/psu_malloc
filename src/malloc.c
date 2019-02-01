@@ -28,7 +28,7 @@ static void *create_suballocation(page_t *page, size_t size_requested)
     return (n_index->data);
 }
 
-static void *new_page_and_node_unlock(size)
+static void *new_page_and_node_unlock(size_t size)
 {
     void *address = NULL;
 
@@ -37,7 +37,7 @@ static void *new_page_and_node_unlock(size)
     return (address);
 }
 
-static void *create_page_node_unlock(size)
+static void *create_page_node_unlock(size_t size)
 {
     head = create_page_and_node(size);
     pthread_mutex_unlock(&lock);
