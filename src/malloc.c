@@ -38,20 +38,22 @@ void *malloc(size_t size)
     if (size == 0)
         return (NULL);
     size = ALIGN(size);
+    pthread_mutex_lock(&lock);
     if (p_index == NULL) {
         head = create_page_and_node(size);
+        pthread_mutex_unlock(&lock);
         return (head->node->data);
     }
     while (p_index) {
         if (p_index->full == false &&
         (address = create_suballocation(p_index, size)) != NULL) {
-            // display_memory(head, size);
+            pthread_mutex_unlock(&lock);
             return (address);
         }
         p_index = p_index->next;
     }
     address = add_new_page_and_node(size);
-    // display_memory(head, size);
+    pthread_mutex_unlock(&lock);
     return (address);
 }
 
