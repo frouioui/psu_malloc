@@ -94,8 +94,9 @@ node_t *add_new_node(node_t *node, size_t free_space, size_t size_requested)
 {
     node_t *tmp = node;
 
-    if (size_requested + sizeof(node_t) > free_space)
+    if (size_requested + sizeof(node_t) > free_space) {
         return (NULL);
+    }
     while (tmp && tmp->next) {
         if (!tmp->used && size_requested + sizeof(node_t) <= tmp->size) {
             split_node(tmp, size_requested);

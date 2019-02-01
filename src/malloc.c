@@ -42,20 +42,20 @@ void *malloc(size_t size)
     if (p_index == NULL) {
         head = create_page_and_node(size);
         write(1, "2", 1);
+        // display_memory(head, size);
         return (head->node->data);
     }
     while (p_index && p_index->full == true) {
         p_index = p_index->next;
     }
     if (p_index) {
-        write(1, "3", 1);
         address = create_suballocation(p_index, size);
-        write(1, "9", 1);
     }
     if (!p_index || !address) {
         p_index->next = add_new_page_and_node(size);
         address = p_index->next->node->data;
     }
+    // display_memory(head, size);
     // write(1, "END malloc\n", sizeof("END malloc\n"));
     return (address);
 }
