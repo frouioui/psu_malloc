@@ -12,6 +12,13 @@
 #include <string.h>
 #include "malloc.h"
 
+void merge_node(node_t *node)
+{
+    node->size += sizeof(node_t) + node->next->size;
+    node->next = node->next->next;
+    node->next_node_addr = (void *)get_addr(node->data, node->size);
+}
+
 void free(void *node)
 {
     page_t *p_index = head;
@@ -42,6 +49,8 @@ void free(void *node)
     }
     // write(2, "006\n", 4);
     // TODO: merge the next node if it is free = true too
+
+    write(1, "q", 1);
 
     // TODO: check if the current page is the last one and if it is
     // we must free its memory.
