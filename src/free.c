@@ -5,6 +5,13 @@
 ** Main file of the malloc fuctions
 */
 
+/**
+ * \file free.c
+ * \brief File containing the free functions.
+ * \author Cécile CADOUL
+ * \author Florent POINSARD
+ */
+
 #include <pthread.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -13,6 +20,12 @@
 #include <string.h>
 #include "malloc.h"
 
+/**
+ * \fn void release_memory(page_t *p_index, page_t *previous)
+ * \brief Release memory to the system.
+ * \param[in] p_index Pointer on the current memory space allocated.
+ * \param[in] previous Pointer on the previous memory space allocated.
+ */
 void release_memory(page_t *p_index, page_t *previous)
 {
     node_t *index = NULL;
@@ -32,6 +45,11 @@ void release_memory(page_t *p_index, page_t *previous)
         head = NULL;
 }
 
+/**
+ * \fn void free(void *node)
+ * \brief Free the memory space pointed to by ptr.
+ * \param[in] node Pointer on the memory space allocated.
+s */
 void free(void *node)
 {
     page_t *p_index = head;

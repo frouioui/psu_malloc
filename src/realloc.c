@@ -5,12 +5,26 @@
 ** Main file of the malloc fuctions
 */
 
+/**
+ * \file realloc.c
+ * \brief File containing the realloc function.
+ * \author Cécile CADOUL
+ * \author Florent POINSARD
+ */
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 #include "malloc.h"
 
+/**
+ * \fn void *realloc(void *ptr, size_t size)
+ * \brief Change the size of the memory block pointed to by ptr to size bytes.
+ * \param[in] ptr Memory block pointer.
+ * \param[in] size Size requested.
+ * \return New memory block pointer.
+ */
 void *realloc(void *ptr, size_t size)
 {
     node_t *node = NULL;

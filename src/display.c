@@ -5,11 +5,24 @@
 ** Display memory functions
 */
 
+/**
+ * \file display.c
+ * \brief File containing the display functions.
+ * \author Cécile CADOUL
+ * \author Florent POINSARD
+ */
+
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 #include "malloc.h"
 
+/**
+ * \fn static void display_node(node_t *node, int index)
+ * \brief Display sub-allocation node informations.
+ * \param[in] node Current sub-allocation node.
+ * \param[in] index Index of the sub-allocation node.
+ */
 static void display_node(node_t *node, int index)
 {
     char buf[8][100];
@@ -37,6 +50,12 @@ static ul get_addr_dif(ul final_page_addr, ul last_node_addr)
     return (final_page_addr - last_node_addr);
 }
 
+/**
+ * \fn static void display_page_header(page_t *page, int index)
+ * \brief Display page header informations.
+ * \param[in] page Current allocated page.
+ * \param[in] index Index of the allocated page.
+ */
 static void display_page_header(page_t *page, int index)
 {
     char buf[4][100];
@@ -51,6 +70,12 @@ static void display_page_header(page_t *page, int index)
         write(1, buf[j], strlen(buf[j]));
 }
 
+/**
+ * \fn static void display_page(page_t *page, int index)
+ * \brief Display the current page informations.
+ * \param[in] page Current allocated page.
+ * \param[in] index Index of the allocated page.
+ */
 static void display_page(page_t *page, int index)
 {
     char buf[8][100];
@@ -74,6 +99,12 @@ static void display_page(page_t *page, int index)
         write(1, buf[j], strlen(buf[j]));
 }
 
+/**
+ * \fn void display_memory(page_t *page, size_t size_req)
+ * \brief Display all informations about the allocation zone.
+ * \param[in] page First allocated page.
+ * \param[in] size_req Size requested by the user.
+ */
 void display_memory(page_t *page, size_t size_req)
 {
     char buf[100];

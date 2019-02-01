@@ -5,12 +5,25 @@
 ** Node fuctions
 */
 
+/**
+ * \file node.c
+ * \brief File containing the node functions
+ * \author Cécile CADOUL
+ * \author Florent POINSARD
+ */
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 #include "malloc.h"
 
+/**
+ * \fn void init_node(node_t *node, size_t size_requested)
+ * \brief Initialize a new sub-allocation node.
+ * \param[in] node Sub-allocation node.
+ * \param[in] size_requested Size requested by the user.
+ */
 void init_node(node_t *node, size_t size_requested)
 {
     node->size = size_requested;
@@ -20,6 +33,13 @@ void init_node(node_t *node, size_t size_requested)
     node->next_node_addr = get_addr(node->data, size_requested);
 }
 
+/**
+ * \fn node_t *init_new_node(node_t *previous, size_t size_requested)
+ * \brief Create a new sub-allocation node.
+ * \param[in] previous Previous suballocation node.
+ * \param[in] size_requested Size requested by the user.
+ * \return New sub-allocation node.
+ */
 node_t *init_new_node(node_t *previous, size_t size_requested)
 {
     node_t *new_node = NULL;
@@ -31,6 +51,12 @@ node_t *init_new_node(node_t *previous, size_t size_requested)
     return (new_node);
 }
 
+/**
+ * \fn void split_node(node_t *node, size_t size_node_a)
+ * \brief Split a sub-allocation node.
+ * \param[in] node Sub-allocation node.
+ * \param[in] size_node_a Size requested by the user.
+ */
 void split_node(node_t *node, size_t size_node_a)
 {
     node_t *new = node->next_node_addr;
@@ -42,6 +68,13 @@ void split_node(node_t *node, size_t size_node_a)
     node->size = size_node_a;
 }
 
+/**
+ * \fn void *check_new_node_free(node_t *node, size_t size_requested)
+ * \brief Check if the node is freed.
+ * \param[in] node Sub-allocation node.
+ * \param[in] size_requested Size requested by the user.
+ * \return Address of the sub-allocation node if it is free, elsewise NULL.
+ */
 void *check_new_node_free(node_t *node, size_t size_requested)
 {
     if (!node->used && size_requested + sizeof(node_t) <= node->size) {
@@ -54,6 +87,15 @@ void *check_new_node_free(node_t *node, size_t size_requested)
     return (NULL);
 }
 
+/**
+ * \fn node_t *add_new_node(node_t *node, size_t free_space,
+ *      size_t size_requested)
+ * \brief Add a new sub-allocation node.
+ * \param[in] node First sub-allocation node of the current page.
+ * \param[in] free_space Free space in the current page.
+ * \param[in] size_requested Size requested by the user.
+ * \return Address of the new sub-allocation node.
+ */
 node_t *add_new_node(node_t *node, size_t free_space, size_t size_requested)
 {
     node_t *tmp = node;
