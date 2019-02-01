@@ -13,7 +13,6 @@
 #include <string.h>
 #include "malloc.h"
 
-
 void release_memory(page_t *p_index, page_t *previous)
 {
     node_t *index = NULL;
