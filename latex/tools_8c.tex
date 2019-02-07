@@ -1,0 +1,89 @@
+\hypertarget{tools_8c}{}\section{src/tools.c File Reference}
+\label{tools_8c}\index{src/tools.\+c@{src/tools.\+c}}
+
+
+File containing tools functions.  
+
+
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}malloc.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \hyperlink{tools_8c_a8b74c6b2512c5782e640489beb8ca8e5}{get\+\_\+addr} (void $\ast$addr, size\+\_\+t offset)
+\begin{DoxyCompactList}\small\item\em Commpute an address thanks to another one and an offset. \end{DoxyCompactList}\item 
+size\+\_\+t \hyperlink{tools_8c_ae9d0077392f4c505433be695ec4e3720}{get\+\_\+free\+\_\+space} (void $\ast$final\+\_\+adrress, void $\ast$last\+\_\+address)
+\begin{DoxyCompactList}\small\item\em Compute free space in the current page. \end{DoxyCompactList}\item 
+void \hyperlink{tools_8c_a3bbfd96b58db0539fd02af896ae01706}{update\+\_\+free\+\_\+space} (\hyperlink{structpage__s}{page\+\_\+t} $\ast$page)
+\begin{DoxyCompactList}\small\item\em Update free space in the page given as parameter. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+File containing tools functions. 
+
+\begin{DoxyAuthor}{Author}
+Cécile C\+A\+D\+O\+UL 
+
+Florent P\+O\+I\+N\+S\+A\+RD 
+\end{DoxyAuthor}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{tools_8c_a8b74c6b2512c5782e640489beb8ca8e5}\label{tools_8c_a8b74c6b2512c5782e640489beb8ca8e5}} 
+\index{tools.\+c@{tools.\+c}!get\+\_\+addr@{get\+\_\+addr}}
+\index{get\+\_\+addr@{get\+\_\+addr}!tools.\+c@{tools.\+c}}
+\subsubsection{\texorpdfstring{get\+\_\+addr()}{get\_addr()}}
+{\footnotesize\ttfamily void$\ast$ get\+\_\+addr (\begin{DoxyParamCaption}\item[{void $\ast$}]{addr,  }\item[{size\+\_\+t}]{offset }\end{DoxyParamCaption})}
+
+
+
+Commpute an address thanks to another one and an offset. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em addr} & Reference address. \\
+\hline
+\mbox{\tt in}  & {\em offset} & Desired offset. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+New calculated address. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{tools_8c_ae9d0077392f4c505433be695ec4e3720}\label{tools_8c_ae9d0077392f4c505433be695ec4e3720}} 
+\index{tools.\+c@{tools.\+c}!get\+\_\+free\+\_\+space@{get\+\_\+free\+\_\+space}}
+\index{get\+\_\+free\+\_\+space@{get\+\_\+free\+\_\+space}!tools.\+c@{tools.\+c}}
+\subsubsection{\texorpdfstring{get\+\_\+free\+\_\+space()}{get\_free\_space()}}
+{\footnotesize\ttfamily size\+\_\+t get\+\_\+free\+\_\+space (\begin{DoxyParamCaption}\item[{void $\ast$}]{final\+\_\+adrress,  }\item[{void $\ast$}]{last\+\_\+address }\end{DoxyParamCaption})}
+
+
+
+Compute free space in the current page. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em final\+\_\+adrress} & Address of the page end. \\
+\hline
+\mbox{\tt in}  & {\em last\+\_\+address} & Address of the last sub-\/allocation. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Free space in the current page. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{tools_8c_a3bbfd96b58db0539fd02af896ae01706}\label{tools_8c_a3bbfd96b58db0539fd02af896ae01706}} 
+\index{tools.\+c@{tools.\+c}!update\+\_\+free\+\_\+space@{update\+\_\+free\+\_\+space}}
+\index{update\+\_\+free\+\_\+space@{update\+\_\+free\+\_\+space}!tools.\+c@{tools.\+c}}
+\subsubsection{\texorpdfstring{update\+\_\+free\+\_\+space()}{update\_free\_space()}}
+{\footnotesize\ttfamily void update\+\_\+free\+\_\+space (\begin{DoxyParamCaption}\item[{\hyperlink{structpage__s}{page\+\_\+t} $\ast$}]{page }\end{DoxyParamCaption})}
+
+
+
+Update free space in the page given as parameter. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em page} & Current page. \\
+\hline
+\end{DoxyParams}

@@ -49,7 +49,7 @@ void release_memory(page_t *p_index, page_t *previous)
  * \fn void free(void *node)
  * \brief Free the memory space pointed to by ptr.
  * \param[in] node Pointer on the memory space allocated.
-s */
+ */
 void free(void *node)
 {
     page_t *p_index = head;

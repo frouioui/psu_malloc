@@ -1,0 +1,87 @@
+\hypertarget{page_8c}{}\section{src/page.c File Reference}
+\label{page_8c}\index{src/page.\+c@{src/page.\+c}}
+
+
+File containing the page functions.  
+
+
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}malloc.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structpage__s}{page\+\_\+t} $\ast$ \hyperlink{page_8c_a18ce5de23cf63e835b9267c9eb0df2cf}{create\+\_\+page\+\_\+and\+\_\+node} (size\+\_\+t size\+\_\+requested)
+\begin{DoxyCompactList}\small\item\em Create a new allocated page. \end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{page_8c_afb92aee40b03511dbd23a0df55c9365e}{add\+\_\+new\+\_\+page\+\_\+and\+\_\+node} (size\+\_\+t size\+\_\+requested)
+\begin{DoxyCompactList}\small\item\em Add a new allocated page. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const size\+\_\+t \hyperlink{page_8c_aed117b301a308c9da71c3ac21e197450}{M\+I\+N\+\_\+\+P\+A\+G\+ES} = 512
+\begin{DoxyCompactList}\small\item\em Default multiplication factor for the page. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+File containing the page functions. 
+
+\begin{DoxyAuthor}{Author}
+Cécile C\+A\+D\+O\+UL 
+
+Florent P\+O\+I\+N\+S\+A\+RD 
+\end{DoxyAuthor}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{page_8c_afb92aee40b03511dbd23a0df55c9365e}\label{page_8c_afb92aee40b03511dbd23a0df55c9365e}} 
+\index{page.\+c@{page.\+c}!add\+\_\+new\+\_\+page\+\_\+and\+\_\+node@{add\+\_\+new\+\_\+page\+\_\+and\+\_\+node}}
+\index{add\+\_\+new\+\_\+page\+\_\+and\+\_\+node@{add\+\_\+new\+\_\+page\+\_\+and\+\_\+node}!page.\+c@{page.\+c}}
+\subsubsection{\texorpdfstring{add\+\_\+new\+\_\+page\+\_\+and\+\_\+node()}{add\_new\_page\_and\_node()}}
+{\footnotesize\ttfamily void$\ast$ add\+\_\+new\+\_\+page\+\_\+and\+\_\+node (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{size\+\_\+requested }\end{DoxyParamCaption})}
+
+
+
+Add a new allocated page. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em size\+\_\+requested} & Size requested by the user. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Address of a new allocated page. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{page_8c_a18ce5de23cf63e835b9267c9eb0df2cf}\label{page_8c_a18ce5de23cf63e835b9267c9eb0df2cf}} 
+\index{page.\+c@{page.\+c}!create\+\_\+page\+\_\+and\+\_\+node@{create\+\_\+page\+\_\+and\+\_\+node}}
+\index{create\+\_\+page\+\_\+and\+\_\+node@{create\+\_\+page\+\_\+and\+\_\+node}!page.\+c@{page.\+c}}
+\subsubsection{\texorpdfstring{create\+\_\+page\+\_\+and\+\_\+node()}{create\_page\_and\_node()}}
+{\footnotesize\ttfamily \hyperlink{structpage__s}{page\+\_\+t}$\ast$ create\+\_\+page\+\_\+and\+\_\+node (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{size\+\_\+requested }\end{DoxyParamCaption})}
+
+
+
+Create a new allocated page. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em size\+\_\+requested} & Size requested by the user. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+New allocated page. 
+\end{DoxyReturn}
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{page_8c_aed117b301a308c9da71c3ac21e197450}\label{page_8c_aed117b301a308c9da71c3ac21e197450}} 
+\index{page.\+c@{page.\+c}!M\+I\+N\+\_\+\+P\+A\+G\+ES@{M\+I\+N\+\_\+\+P\+A\+G\+ES}}
+\index{M\+I\+N\+\_\+\+P\+A\+G\+ES@{M\+I\+N\+\_\+\+P\+A\+G\+ES}!page.\+c@{page.\+c}}
+\subsubsection{\texorpdfstring{M\+I\+N\+\_\+\+P\+A\+G\+ES}{MIN\_PAGES}}
+{\footnotesize\ttfamily size\+\_\+t M\+I\+N\+\_\+\+P\+A\+G\+ES = 512}
+
+
+
+Default multiplication factor for the page. 
+
+Number of pagesize that sbrk will ask for to the system. 

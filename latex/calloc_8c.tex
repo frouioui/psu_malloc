@@ -1,0 +1,47 @@
+\hypertarget{calloc_8c}{}\section{src/calloc.c File Reference}
+\label{calloc_8c}\index{src/calloc.\+c@{src/calloc.\+c}}
+
+
+File containing the calloc function.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}malloc.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \hyperlink{calloc_8c_a62b7798461bd461da64c5f9d35feddf7}{calloc} (size\+\_\+t nmemb, size\+\_\+t size)
+\begin{DoxyCompactList}\small\item\em Allocate memory for an array of nmemb elements of size bytes each and returns a pointer to the allocated memory. The memory is set to zero. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+File containing the calloc function. 
+
+\begin{DoxyAuthor}{Author}
+Cécile C\+A\+D\+O\+UL 
+
+Florent P\+O\+I\+N\+S\+A\+RD 
+\end{DoxyAuthor}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{calloc_8c_a62b7798461bd461da64c5f9d35feddf7}\label{calloc_8c_a62b7798461bd461da64c5f9d35feddf7}} 
+\index{calloc.\+c@{calloc.\+c}!calloc@{calloc}}
+\index{calloc@{calloc}!calloc.\+c@{calloc.\+c}}
+\subsubsection{\texorpdfstring{calloc()}{calloc()}}
+{\footnotesize\ttfamily void$\ast$ calloc (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{nmemb,  }\item[{size\+\_\+t}]{size }\end{DoxyParamCaption})}
+
+
+
+Allocate memory for an array of nmemb elements of size bytes each and returns a pointer to the allocated memory. The memory is set to zero. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em nmemb} & Number of elements in an array. \\
+\hline
+\mbox{\tt in}  & {\em size} & Size to be allocated in each elements. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Address of a new allocated block. 
+\end{DoxyReturn}

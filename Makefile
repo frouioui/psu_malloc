@@ -11,11 +11,12 @@ DOC_FILE	=	Doxyfile
 ## ------------- UNIT TESTS ------------- ##
 CC	=	gcc -fPIC $(INCLUDE) -g3
 
-UT_DIR	=	./tests/
-
-UT_SRC	=
+UT_DIR	=	./tests
 
 UT	=	units
+
+UT_SRC = $(UT_DIR)/tests_tool.c \
+		$(SRC_DIR)tools.c \
 
 ## ------------- SHARED LIB ------------- ##
 LIB_DIR	= 	./src/
@@ -75,7 +76,7 @@ gdb:
 	gcc -o $(NAME) $(SRC) $(MAIN) -g3 $(INCLUDE)
 
 tests_run:
-	gcc -o $(UT) $(UT_SRC) $(SRC) $(CFLAGS) $(LDFLAGS)
+	gcc -o $(UT) $(UT_SRC) $(LDFLAGS) -iquote ./include
 	./$(UT)
 
 doxygen:

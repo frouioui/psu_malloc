@@ -47,6 +47,8 @@ extern pthread_mutex_t lock;
 page_t *create_page_and_node(size_t size_requested);
 void *add_new_page_and_node(size_t size_requested);
 
+void *get_addr(void *addr, size_t offset);
+
 node_t *add_new_node(node_t *node, size_t free_space, size_t size_requested);
 void init_node(node_t *node, size_t size_requested);
 
